@@ -26,3 +26,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["oddlot_pricer*"]
+
+# Vercel FastAPI preset (Root Directory = pricer/)
+[tool.vercel]
+entrypoint = "oddlot_pricer.api.main:app"

@@ -10,8 +10,27 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_CONFIG_PATH = ROOT / "config" / "oddlot.json"
+# Local monorepo: repo_root/config/oddlot.json
+# Vercel (Root Directory = pricer/): pricer/config/oddlot.json
+_PACKAGE_DIR = Path(__file__).resolve().parent
+_PRICER_ROOT = _PACKAGE_DIR.parent
+_REPO_ROOT = _PRICER_ROOT.parent
+
+
+def _resolve_default_config_path() -> Path:
+    candidates = [
+        _REPO_ROOT / "config" / "oddlot.json",
+        _PRICER_ROOT / "config" / "oddlot.json",
+        Path.cwd() / "config" / "oddlot.json",
+    ]
+    for path in candidates:
+        if path.is_file():
+            return path
+    return candidates[0]
+
+
+ROOT = _REPO_ROOT
+DEFAULT_CONFIG_PATH = _resolve_default_config_path()
 
 
 @dataclass(frozen=True)
@@ -123,4 +142,4 @@ def load_config(path: Path | None = None) -> OddlotConfig:
 
 @lru_cache(maxsize=1)
 def get_config() -> OddlotConfig:
-    return load_config()
+    return load_config(_resolve_default_config_path())

@@ -1,0 +1,51 @@
+{
+  "cluster": "devnet",
+  "underlying": "SPY",
+  "pyth_feed_id": "19e09bb805456ada3979a7d1cbb4b6d63babc3a0f8e8a9509f68afa5c4c11cd5",
+  "usdc_mint": "3GQqfzNtHu9EXrn8fwXkeU6FkgC3n9eRJv1VdWK6xAq9",
+  "program_id": "AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n",
+  "vault": {
+    "max_util_bps": 8000,
+    "quote_max_age_s": 60,
+    "oracle_max_age_s": 60,
+    "settle_window_s": 900,
+    "max_conf_bps": 50
+  },
+  "year_end": {
+    "expiry": "2026-12-31T21:00:00Z",
+    "strike_step": 20,
+    "strike_band_pct": 8,
+    "widths": [20, 40],
+    "kinds": ["call", "put"],
+    "max_open_interest": 500,
+    "buy_cutoff_s": 600
+  },
+  "demo": {
+    "expiry_after_s": 480,
+    "buy_cutoff_s": 30,
+    "widths": [20, 40],
+    "max_open_interest": 2000,
+    "sigma": 0.16,
+    "replay_file": "config/replay-shock.json"
+  },
+  "pricing": {
+    "spread": 0.03,
+    "min_premium": 0.05,
+    "rate": 0.0,
+    "crowd_min_coverage": 0.8,
+    "gemini_base": "https://api.gemini.com",
+    "gemini_event": "SPXEND26",
+    "spx_ratio_fallback": 0.1
+  },
+  "hedging": {
+    "round_lot": 100,
+    "delta_band_shares": 5,
+    "rehedge_interval_s": 60,
+    "spyx_cost_bps": 2
+  },
+  "keeper": {
+    "quote_interval_s": 15,
+    "settle_poll_s": 60,
+    "exercise_batch": 5
+  }
+}

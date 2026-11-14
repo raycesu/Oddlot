@@ -29,3 +29,4 @@ Record agent decisions here when the PRD leaves something unspecified.
 | 2026-11-14 | `/quotes` series list is an in-memory year-end grid around spot from config | Chain discovery waits for M3 keeper; grid is enough for quotes + schema tests | WS2 |
 | 2026-11-14 | Coverage = Σ two-sided mid estimates ÷ Σ all bucket estimates | Reproduces PRD toy coverage 0.876; one-sided buckets use ask (or bid) as estimate | WS2 |
 | 2026-11-14 | `OFFLINE_PRICER=1` serves toy Gemini + spot 780 | Lets local uvicorn and CI run without API keys | WS2 |
+| 2026-11-14 | Host public pricer on Vercel; `pricer/main.py` + `tool.vercel.entrypoint`; ship `pricer/config/` copy | Dashboard Root Directory is `pricer/`; default FastAPI locations miss `oddlot_pricer.api.main`; parent `config/` is outside that root | WS2/M3 |

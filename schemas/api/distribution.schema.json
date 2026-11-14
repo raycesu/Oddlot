@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oddlot.local/schemas/api/distribution.schema.json",
+  "title": "GET /distribution",
+  "type": "object",
+  "required": ["event", "r", "coverage", "buckets"],
+  "properties": {
+    "event": { "type": "string" },
+    "r": { "type": "string" },
+    "coverage": { "type": "string" },
+    "buckets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "spy_mid", "crowd_prob", "bs_prob", "bid", "ask"],
+        "properties": {
+          "label": { "type": "string" },
+          "spy_mid": { "type": "string" },
+          "crowd_prob": { "type": "string" },
+          "bs_prob": { "type": "string" },
+          "bid": { "type": ["string", "null"] },
+          "ask": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

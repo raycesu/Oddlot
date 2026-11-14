@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oddlot.local/schemas/api/book.schema.json",
+  "title": "GET /book",
+  "type": "object",
+  "required": ["asof", "series", "listed_spreads", "gemini", "spyx_shares", "pnl"],
+  "properties": {
+    "asof": { "type": "string", "format": "date-time" },
+    "series": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["series", "open_interest", "lots_hedged", "residual"],
+        "properties": {
+          "series": { "type": "string" },
+          "open_interest": { "type": "integer", "minimum": 0 },
+          "lots_hedged": { "type": "integer", "minimum": 0 },
+          "residual": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "listed_spreads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["series", "qty", "fill", "ts"],
+        "properties": {
+          "series": { "type": "string" },
+          "qty": { "type": "integer" },
+          "fill": { "type": "string" },
+          "ts": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "gemini": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "contracts", "avg_price"],
+        "properties": {
+          "label": { "type": "string" },
+          "contracts": { "type": "integer" },
+          "avg_price": { "type": "string" }
+        }
+      }
+    },
+    "spyx_shares": { "type": "string" },
+    "pnl": {
+      "type": "object",
+      "required": ["premiums", "hedge_mark", "net"],
+      "properties": {
+        "premiums": { "type": "string" },
+        "hedge_mark": { "type": "string" },
+        "net": { "type": "string" }
+      }
+    }
+  }
+}

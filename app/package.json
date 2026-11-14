@@ -1,0 +1,14 @@
+{
+  "name": "@oddlot/app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WS4 — Next.js Buy / Protect / Vault",
+  "scripts": {
+    "dev": "echo \"Next.js app scaffold — run create-next-app wiring in M4\" && exit 1",
+    "build": "echo \"Next.js app scaffold — not implemented\" && exit 1",
+    "start": "echo \"Next.js app scaffold — not implemented\" && exit 1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

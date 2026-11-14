@@ -1,0 +1,669 @@
+{
+  "address": "AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n",
+  "metadata": {
+    "name": "oddlot",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Oddlot — fractional SPY options vault on Solana"
+  },
+  "instructions": [
+    {
+      "name": "buy",
+      "discriminator": [
+        102,
+        6,
+        61,
+        18,
+        1,
+        218,
+        235,
+        234
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "qty",
+          "type": "u64"
+        },
+        {
+          "name": "max_cost",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_series",
+      "discriminator": [
+        181,
+        9,
+        52,
+        120,
+        197,
+        221,
+        42,
+        142
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "underlying",
+          "type": {
+            "array": [
+              "u8",
+              8
+            ]
+          }
+        },
+        {
+          "name": "kind",
+          "type": "u8"
+        },
+        {
+          "name": "strike",
+          "type": "u64"
+        },
+        {
+          "name": "width",
+          "type": "u64"
+        },
+        {
+          "name": "expiry",
+          "type": "i64"
+        },
+        {
+          "name": "buy_cutoff_s",
+          "type": "u32"
+        },
+        {
+          "name": "oracle_kind",
+          "type": "u8"
+        },
+        {
+          "name": "pyth_feed_id",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "max_open_interest",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "deposit",
+      "discriminator": [
+        242,
+        35,
+        198,
+        137,
+        82,
+        225,
+        242,
+        182
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "exercise",
+      "discriminator": [
+        144,
+        79,
+        103,
+        64,
+        241,
+        78,
+        80,
+        174
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_vault",
+      "discriminator": [
+        77,
+        79,
+        85,
+        150,
+        33,
+        217,
+        52,
+        106
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "keeper",
+          "type": "pubkey"
+        },
+        {
+          "name": "max_util_bps",
+          "type": "u16"
+        },
+        {
+          "name": "quote_max_age_s",
+          "type": "u32"
+        },
+        {
+          "name": "oracle_max_age_s",
+          "type": "u32"
+        },
+        {
+          "name": "settle_window_s",
+          "type": "u32"
+        },
+        {
+          "name": "max_conf_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "post_quote",
+      "discriminator": [
+        68,
+        231,
+        88,
+        224,
+        13,
+        116,
+        27,
+        84
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "premium",
+          "type": "u64"
+        },
+        {
+          "name": "bs_premium",
+          "type": "u64"
+        },
+        {
+          "name": "crowd_premium",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "set_demo_price",
+      "discriminator": [
+        9,
+        174,
+        93,
+        13,
+        189,
+        204,
+        41,
+        119
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "price",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "set_paused",
+      "discriminator": [
+        91,
+        60,
+        125,
+        192,
+        176,
+        225,
+        166,
+        218
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "settle",
+      "discriminator": [
+        175,
+        42,
+        185,
+        87,
+        144,
+        131,
+        102,
+        212
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdraw",
+      "discriminator": [
+        183,
+        18,
+        70,
+        156,
+        148,
+        109,
+        161,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "shares",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "Bought",
+      "discriminator": [
+        193,
+        56,
+        215,
+        24,
+        156,
+        76,
+        42,
+        104
+      ]
+    },
+    {
+      "name": "Deposited",
+      "discriminator": [
+        111,
+        141,
+        26,
+        45,
+        161,
+        35,
+        100,
+        57
+      ]
+    },
+    {
+      "name": "Exercised",
+      "discriminator": [
+        199,
+        234,
+        66,
+        198,
+        152,
+        62,
+        234,
+        154
+      ]
+    },
+    {
+      "name": "Quoted",
+      "discriminator": [
+        229,
+        103,
+        133,
+        57,
+        86,
+        210,
+        35,
+        126
+      ]
+    },
+    {
+      "name": "Settled",
+      "discriminator": [
+        232,
+        210,
+        40,
+        17,
+        142,
+        124,
+        145,
+        238
+      ]
+    },
+    {
+      "name": "Withdrawn",
+      "discriminator": [
+        20,
+        89,
+        223,
+        198,
+        194,
+        124,
+        219,
+        13
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Paused",
+      "msg": "Sales are paused"
+    },
+    {
+      "code": 6001,
+      "name": "ZeroQuantity",
+      "msg": "Quantity must be greater than zero"
+    },
+    {
+      "code": 6002,
+      "name": "BuyWindowClosed",
+      "msg": "Buy window has closed for this series"
+    },
+    {
+      "code": 6003,
+      "name": "QuoteStale",
+      "msg": "On-chain quote is stale"
+    },
+    {
+      "code": 6004,
+      "name": "MarketClosed",
+      "msg": "Market closed or oracle price is stale"
+    },
+    {
+      "code": 6005,
+      "name": "OracleConfidence",
+      "msg": "Oracle confidence too wide"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidOracle",
+      "msg": "Invalid oracle account or feed id"
+    },
+    {
+      "code": 6007,
+      "name": "OpenInterestCap",
+      "msg": "Open interest cap exceeded"
+    },
+    {
+      "code": 6008,
+      "name": "SlippageExceeded",
+      "msg": "Slippage exceeded max_cost"
+    },
+    {
+      "code": 6009,
+      "name": "UtilizationCap",
+      "msg": "Vault utilization cap exceeded"
+    },
+    {
+      "code": 6010,
+      "name": "InsufficientFreeLiquidity",
+      "msg": "Insufficient free liquidity for withdrawal"
+    },
+    {
+      "code": 6011,
+      "name": "NotExpired",
+      "msg": "Series has not expired"
+    },
+    {
+      "code": 6012,
+      "name": "AlreadySettled",
+      "msg": "Series already settled"
+    },
+    {
+      "code": 6013,
+      "name": "NotSettled",
+      "msg": "Series is not settled"
+    },
+    {
+      "code": 6014,
+      "name": "SettlePriceOutOfWindow",
+      "msg": "Settle price outside allowed window"
+    },
+    {
+      "code": 6015,
+      "name": "InvalidSeriesParams",
+      "msg": "Invalid series parameters"
+    },
+    {
+      "code": 6016,
+      "name": "WrongMint",
+      "msg": "Wrong option mint"
+    },
+    {
+      "code": 6017,
+      "name": "Unauthorized",
+      "msg": "Unauthorized signer"
+    },
+    {
+      "code": 6018,
+      "name": "MathOverflow",
+      "msg": "Checked math overflow"
+    },
+    {
+      "code": 6019,
+      "name": "NotImplemented",
+      "msg": "Instruction not implemented in scaffold"
+    }
+  ],
+  "types": [
+    {
+      "name": "Bought",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "buyer",
+            "type": "pubkey"
+          },
+          {
+            "name": "series",
+            "type": "pubkey"
+          },
+          {
+            "name": "qty",
+            "type": "u64"
+          },
+          {
+            "name": "cost",
+            "type": "u64"
+          },
+          {
+            "name": "spot",
+            "type": "u64"
+          },
+          {
+            "name": "ts",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Deposited",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lp",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "shares",
+            "type": "u64"
+          },
+          {
+            "name": "ts",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Exercised",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "holder",
+            "type": "pubkey"
+          },
+          {
+            "name": "series",
+            "type": "pubkey"
+          },
+          {
+            "name": "qty",
+            "type": "u64"
+          },
+          {
+            "name": "paid",
+            "type": "u64"
+          },
+          {
+            "name": "ts",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Quoted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "series",
+            "type": "pubkey"
+          },
+          {
+            "name": "premium",
+            "type": "u64"
+          },
+          {
+            "name": "bs_premium",
+            "type": "u64"
+          },
+          {
+            "name": "crowd_premium",
+            "type": "u64"
+          },
+          {
+            "name": "ts",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Settled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "series",
+            "type": "pubkey"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "payoff_per_token",
+            "type": "u64"
+          },
+          {
+            "name": "ts",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Withdrawn",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lp",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "shares",
+            "type": "u64"
+          },
+          {
+            "name": "ts",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}

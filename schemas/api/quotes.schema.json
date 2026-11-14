@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oddlot.local/schemas/api/quotes.schema.json",
+  "title": "GET /quotes",
+  "type": "object",
+  "required": ["asof", "spot", "quotes"],
+  "properties": {
+    "asof": { "type": "string", "format": "date-time" },
+    "spot": { "type": "string" },
+    "quotes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "series",
+          "underlying",
+          "kind",
+          "strike",
+          "width",
+          "expiry",
+          "premium",
+          "bs_premium",
+          "crowd_premium",
+          "iv",
+          "source"
+        ],
+        "properties": {
+          "series": { "type": "string" },
+          "underlying": { "type": "string" },
+          "kind": { "enum": ["call", "put"] },
+          "strike": { "type": "string" },
+          "width": { "type": "string" },
+          "expiry": { "type": "string", "format": "date-time" },
+          "premium": { "type": "string" },
+          "bs_premium": { "type": "string" },
+          "crowd_premium": { "type": "string" },
+          "iv": { "type": "string" },
+          "source": { "enum": ["bs", "crowd"] }
+        }
+      }
+    }
+  }
+}

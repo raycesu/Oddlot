@@ -1,0 +1,59 @@
+---
+description: Oddlot agent rules from the master PRD — source of truth, scope, and never-dos
+alwaysApply: true
+---
+
+# Oddlot — Cursor rules
+
+These rules replace the PRD's `AGENTS.md`. Spec sections in `PRD.md` (Program through Web app, Acceptance tests, Milestones) win over narrative. If two spec sections conflict, stop and ask.
+
+## Decide, log, continue
+
+When something is unspecified, pick the simplest option consistent with `PRD.md`. Record it in `DECISIONS.md` (date, decision, reason, workstream) and keep going.
+
+## Scope
+
+Build P0, then P1, in MVP order. Add nothing else: no extra tickers, features, chains, or mainnet.
+
+Cut order if behind: P2 → P1 charts → Gemini hedge. Never cut collateral checks, auto-exercise, or the Protect screen.
+
+## Tests define done
+
+Write each milestone's acceptance tests first. A milestone is done only when they pass in CI or a recorded local run.
+
+## Frozen interfaces
+
+After M0, these are frozen: `config/oddlot.json`, program accounts/instructions/events, and `schemas/api/*`. To change one, update the spec, every consumer, and `DECISIONS.md` in the same change.
+
+## Check live docs
+
+Use the latest stable Anchor, Pyth, QuickNode, and Gemini APIs. Read current docs before coding against them; do not rely on memory.
+
+## Never
+
+- Commit keypairs, API keys, or `.env` files
+- Touch mainnet or real funds
+- Use floating-point math on-chain
+- Weaken a program check to make a test pass
+
+## Stop and ask a human when
+
+- You need an account, API key, captcha, or faucet
+- A frozen interface must change
+- An acceptance test cannot pass as written
+- Anything would cost real money
+
+## Keep it runnable
+
+At every milestone, `README.md` has working commands to build, test, and run each part locally.
+
+## Workstreams
+
+| WS | Path | Stack |
+|----|------|--------|
+| WS1 Program | `programs/oddlot`, `tests/` | Rust + Anchor, Token-2022, Pyth |
+| WS2 Pricer | `pricer/` | Python 3.12, FastAPI |
+| WS3 Keeper | `keeper/` | TypeScript, Node |
+| WS4 Web app | `app/` | Next.js App Router, Tailwind, wallet adapter |
+
+Single-agent order: WS1 → WS2 → WS3 → WS4. Parallel after M0 freezes shared contracts.

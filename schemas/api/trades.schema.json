@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oddlot.local/schemas/api/trades.schema.json",
+  "title": "GET /trades",
+  "type": "object",
+  "required": ["trades"],
+  "properties": {
+    "trades": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["signature", "ts", "buyer", "series", "kind", "qty", "cost"],
+        "properties": {
+          "signature": { "type": "string" },
+          "ts": { "type": "string", "format": "date-time" },
+          "buyer": { "type": "string" },
+          "series": { "type": "string" },
+          "kind": { "enum": ["call", "put"] },
+          "qty": { "type": "integer", "minimum": 0 },
+          "cost": { "type": "string" }
+        }
+      }
+    }
+  }
+}

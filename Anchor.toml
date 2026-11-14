@@ -1,0 +1,22 @@
+skip_local_validator = true
+
+[toolchain]
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+oddlot = "AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n"
+
+[programs.devnet]
+oddlot = "AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "cargo test"
+
+[hooks]

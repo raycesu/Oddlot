@@ -1,0 +1,42 @@
+# Secrets / local env
+.env
+.env.*
+!.env.example
+*.pem
+*-keypair.json
+.keypair/
+keypairs/
+
+# Dependencies / build
+node_modules/
+.pnpm-store/
+dist/
+build/
+.next/
+out/
+target/
+.anchor/
+test-ledger/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs / local data
+*.log
+pricer/oddlot.db
+pricer/*.db
+.turbo/

@@ -1,10 +1,13 @@
-//! Oddlot program — scaffold only.
-//! Account / instruction / event shapes match `PRD.md`. Logic lands in M1.
+//! Oddlot program. Account, instruction, and event shapes match `docs/master-prd.md`.
 
 pub mod constants;
 pub mod error;
 pub mod events;
 pub mod instructions;
+pub mod math;
+pub mod name;
+pub mod oracle;
+pub mod pda;
 pub mod state;
 
 use anchor_lang::prelude::*;
@@ -13,7 +16,22 @@ pub use constants::*;
 pub use error::*;
 pub use events::*;
 pub use instructions::*;
+pub use pda::{
+    demo_oracle_address, option_mint_address, series_address, usdc_vault_address, vault_address,
+};
 pub use state::*;
+
+// Anchor's generated `accounts` module imports these from the crate root.
+pub use instructions::buy::__client_accounts_buy;
+pub use instructions::create_series::__client_accounts_create_series;
+pub use instructions::deposit::__client_accounts_deposit;
+pub use instructions::exercise::__client_accounts_exercise;
+pub use instructions::init_vault::__client_accounts_init_vault;
+pub use instructions::post_quote::__client_accounts_post_quote;
+pub use instructions::set_demo_price::__client_accounts_set_demo_price;
+pub use instructions::set_paused::__client_accounts_set_paused;
+pub use instructions::settle::__client_accounts_settle;
+pub use instructions::withdraw::__client_accounts_withdraw;
 
 declare_id!("AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n");
 

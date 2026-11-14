@@ -5,11 +5,18 @@ alwaysApply: true
 
 # Oddlot — Cursor rules
 
-These rules replace the PRD's `AGENTS.md`. Spec sections in `PRD.md` (Program through Web app, Acceptance tests, Milestones) win over narrative. If two spec sections conflict, stop and ask.
+These rules replace the PRD's `AGENTS.md`.
+
+**Canonical specs for agents:**
+- Full master PRD: `docs/master-prd.md`
+- UBC hackathon guide: `docs/hackathon-guide-ubc-2026.md`
+- Root `PRD.md` is only an index into those docs
+
+Spec sections in `docs/master-prd.md` (Program through Web app, Acceptance tests, Milestones) win over narrative. If two spec sections conflict, stop and ask.
 
 ## Decide, log, continue
 
-When something is unspecified, pick the simplest option consistent with `PRD.md`. Record it in `DECISIONS.md` (date, decision, reason, workstream) and keep going.
+When something is unspecified, pick the simplest option consistent with `docs/master-prd.md`. Record it in `DECISIONS.md` (date, decision, reason, workstream) and keep going.
 
 ## Scope
 

@@ -2,6 +2,7 @@ use anchor_lang::prelude::*;
 
 /// PDA seeds: `["vault"]`
 #[account]
+#[derive(InitSpace)]
 pub struct Vault {
     pub admin: Pubkey,
     pub keeper: Pubkey,
@@ -20,6 +21,7 @@ pub struct Vault {
 
 /// PDA seeds: `["series", vault, underlying, [kind], strike_le, width_le, expiry_le]`
 #[account]
+#[derive(InitSpace)]
 pub struct Series {
     pub vault: Pubkey,
     /// ASCII, zero-padded (e.g. `b"SPY\0\0\0\0\0"`)
@@ -49,6 +51,7 @@ pub struct Series {
 
 /// PDA seeds: `["demo_oracle", vault]`
 #[account]
+#[derive(InitSpace)]
 pub struct DemoOracle {
     pub price: u64,
     pub ts: i64,

@@ -40,6 +40,4 @@ pub enum OddlotError {
     Unauthorized,
     #[msg("Checked math overflow")]
     MathOverflow,
-    #[msg("Instruction not implemented in scaffold")]
-    NotImplemented,
 }

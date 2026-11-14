@@ -1,3 +1,5 @@
+# Frozen program IDL is tracked on purpose. Do not ignore idl/oddlot.json.
+
 # Secrets / local env
 .env
 .env.*

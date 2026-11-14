@@ -8,7 +8,7 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 
 ## Status
 
-**Scaffold / M0 in progress.** Repo layout, Cursor rules, shared config, frozen API schemas, and program/pricer/keeper/app stubs are in place. Business logic is not implemented yet.
+**M0 frozen. M1 program deployed to devnet.** Shared config, API schemas, and the program IDL are the frozen contract. The program covers vault shares, series mints, buy, settle, and exercise.
 
 ## Repo map
 
@@ -18,8 +18,8 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 | `PRD.md` / `PLAN.md` | Product + architecture |
 | `config/` | Shared `oddlot.json` + demo replay |
 | `schemas/api/` | Frozen WS2 HTTP shapes |
-| `idl/oddlot.json` | Generated program IDL (stub accounts until M1) |
-| `programs/oddlot/` | WS1 Anchor program (stubs) |
+| `idl/oddlot.json` | Generated program IDL |
+| `programs/oddlot/` | WS1 Anchor program |
 | `keeper/` | WS3 keeper + scripts (stubs) |
 | `pricer/` | WS2 FastAPI stub |
 | `app/` | WS4 Next.js scaffold |
@@ -28,20 +28,39 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 ## Quick links
 
 - Architecture: [`PLAN.md`](./PLAN.md)
-- Spec: [`PRD.md`](./PRD.md)
+- **Full master PRD:** [`docs/master-prd.md`](./docs/master-prd.md)
+- **Hackathon guide:** [`docs/hackathon-guide-ubc-2026.md`](./docs/hackathon-guide-ubc-2026.md)
+- Doc index / PDFs: [`docs/README.md`](./docs/README.md)
+- Spec index: [`PRD.md`](./PRD.md)
 - GitHub: https://github.com/raycesu/Oddlot
 
-## Local (scaffold)
+## Local
 
 ```bash
-# Program (emits IDL once build deps resolve)
-anchor build
-
-# Pricer stub
+# Pricer stub — schema validation (M0)
 cd pricer && python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
+pytest
 uvicorn oddlot_pricer.api.main:app --reload --port 8000
+
+# Program build + M1 acceptance tests (LiteSVM, no local validator)
+cd ..
+anchor build --arch v2
+cp target/idl/oddlot.json idl/oddlot.json
+cargo test -p oddlot
+
+# Devnet deploy. The configured RPC returns HTTP 413 on this upload,
+# so use the public devnet endpoint. Program rent is about 2.23 SOL.
+set -a && source .env && set +a
+solana program deploy target/deploy/oddlot.so \
+  --program-id target/deploy/oddlot-keypair.json \
+  --url https://api.devnet.solana.com \
+  --keypair "$ADMIN_KEYPAIR"
 ```
+
+Program id: `AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n`.
+
+Deployed 2026-11-14. Signature `oiav8FAJbeNN9qDBqk4H3eUmkqYUNPZqYaYLBvnBeWixbqtxKA9quC6WBxyxVx5VPBCS2PKwZ4CzsZ2Yw3AhQpN`. The account is executable.
 
 ## Human setup checklist
 

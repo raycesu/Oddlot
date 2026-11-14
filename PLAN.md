@@ -4,6 +4,11 @@ Scaffold only. No program, pricer, keeper, or web app business logic yet.
 
 Cursor rules (`.cursor/rules/`) are the agent entrypoint. The master PRD called this `AGENTS.md`; in this repo every `AGENTS.md` reference means Cursor rules.
 
+**Full specs in-repo:**
+- Master PRD → [`docs/master-prd.md`](./docs/master-prd.md)
+- Hackathon guide → [`docs/hackathon-guide-ubc-2026.md`](./docs/hackathon-guide-ubc-2026.md)
+- PDFs → [`docs/pdfs/`](./docs/pdfs/)
+
 ## Product in one line
 
 Oddlot sells **SPY options in one-share lots**, fully backed by USDC on Solana, priced against Wall Street (Black–Scholes) and Gemini's S&P year-end prediction market.

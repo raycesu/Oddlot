@@ -8,7 +8,7 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 
 ## Status
 
-**M0 frozen. M1 program deployed to devnet.** Shared config, API schemas, and the program IDL are the frozen contract. The program covers vault shares, series mints, buy, settle, and exercise.
+**M0 frozen. M1 program deployed to devnet. M2 pricer unit tests pass.** Shared config, API schemas, and the program IDL are the frozen contract. The program covers vault shares, series mints, buy, settle, and exercise. The pricer covers BS + Gemini crowd quotes, Bought decode, and round-lot netting.
 
 ## Repo map
 
@@ -21,7 +21,7 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 | `idl/oddlot.json` | Generated program IDL |
 | `programs/oddlot/` | WS1 Anchor program |
 | `keeper/` | WS3 keeper + scripts (stubs) |
-| `pricer/` | WS2 FastAPI stub |
+| `pricer/` | WS2 FastAPI pricer + hedger |
 | `app/` | WS4 Next.js scaffold |
 | `DECISIONS.md` | Agent decision log |
 
@@ -37,11 +37,11 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 ## Local
 
 ```bash
-# Pricer stub — schema validation (M0)
+# Pricer — M2 unit tests + local server
 cd pricer && python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 pytest
-uvicorn oddlot_pricer.api.main:app --reload --port 8000
+OFFLINE_PRICER=1 uvicorn oddlot_pricer.api.main:app --reload --port 8000
 
 # Program build + M1 acceptance tests (LiteSVM, no local validator)
 cd ..

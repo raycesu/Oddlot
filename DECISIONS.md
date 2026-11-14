@@ -23,3 +23,9 @@ Record agent decisions here when the PRD leaves something unspecified.
 | 2026-11-14 | Build and deploy with `anchor build --arch v2` | Anchor 1.2 defaults to SBPF v3. Devnet rejected that ELF because v3 execution is not enabled. v2 passes the M1 tests and the devnet loader | WS1 |
 | 2026-11-14 | Devnet deploy uses the public devnet RPC | The configured RPC returned HTTP 413 on the program upload | WS1 |
 | 2026-11-14 | Moved 0.75 SOL from the keeper keypair and 0.75 SOL from the faucet keypair to the admin keypair before deploy | Program rent is 2.22274892 SOL. The admin keypair had 1 SOL and the devnet faucet was rate-limited | WS1 |
+| 2026-11-14 | M2 tests use fixed fixtures; live Hermes/yfinance/Gemini are injectable | M2 gate is unit-only; network calls must not gate acceptance | WS2 |
+| 2026-11-14 | Money as `Decimal`; floats only inside BS/`N(d1)` | Matches PRD WS2 money rule | WS2 |
+| 2026-11-14 | Year-end residual hedges are paper fills at asks; no Gemini order API | Gemini bucket orders are P1; paper keeps `/book` honest for M2/M3 | WS2 |
+| 2026-11-14 | `/quotes` series list is an in-memory year-end grid around spot from config | Chain discovery waits for M3 keeper; grid is enough for quotes + schema tests | WS2 |
+| 2026-11-14 | Coverage = Σ two-sided mid estimates ÷ Σ all bucket estimates | Reproduces PRD toy coverage 0.876; one-sided buckets use ask (or bid) as estimate | WS2 |
+| 2026-11-14 | `OFFLINE_PRICER=1` serves toy Gemini + spot 780 | Lets local uvicorn and CI run without API keys | WS2 |

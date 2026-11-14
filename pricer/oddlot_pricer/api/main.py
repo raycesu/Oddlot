@@ -44,7 +44,13 @@ class PricerState:
     ) -> None:
         self.config = config or get_config()
         self.market = market or LiveMarketData(config=self.config)
-        db_url = os.environ.get("DATABASE_URL", "sqlite:///./oddlot.db")
+        # Vercel’s function FS is read-only except /tmp
+        default_db = (
+            "sqlite:////tmp/oddlot.db"
+            if os.environ.get("VERCEL") == "1"
+            else "sqlite:///./oddlot.db"
+        )
+        db_url = os.environ.get("DATABASE_URL", default_db)
         self.book = book or HedgeBook(db_url)
         self.series = series
         self.stream_token = os.environ.get("QUICKNODE_STREAM_TOKEN", "")

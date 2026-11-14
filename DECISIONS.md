@@ -30,3 +30,4 @@ Record agent decisions here when the PRD leaves something unspecified.
 | 2026-11-14 | Coverage = Σ two-sided mid estimates ÷ Σ all bucket estimates | Reproduces PRD toy coverage 0.876; one-sided buckets use ask (or bid) as estimate | WS2 |
 | 2026-11-14 | `OFFLINE_PRICER=1` serves toy Gemini + spot 780 | Lets local uvicorn and CI run without API keys | WS2 |
 | 2026-11-14 | Host public pricer on Vercel; `pricer/main.py` + `tool.vercel.entrypoint`; ship `pricer/config/` copy | Dashboard Root Directory is `pricer/`; default FastAPI locations miss `oddlot_pricer.api.main`; parent `config/` is outside that root | WS2/M3 |
+| 2026-11-14 | On Vercel, default SQLite path is `/tmp/oddlot.db` when `VERCEL=1` | Function FS is read-only; `./oddlot.db` caused `readonly database` and FUNCTION_INVOCATION_FAILED | WS2/M3 |

@@ -42,3 +42,5 @@ htmlcov/
 pricer/oddlot.db
 pricer/*.db
 .turbo/
+.vercel
+.env*

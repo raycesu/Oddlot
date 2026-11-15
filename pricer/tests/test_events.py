@@ -73,3 +73,23 @@ def test_dupes_processed_once() -> None:
     assert first[0].qty == 44
     second = process_webhook_matches(payload, seen)
     assert second == []
+
+
+def test_webhook_accepts_json_without_a_json_content_type() -> None:
+    import os
+
+    from fastapi.testclient import TestClient
+
+    from oddlot_pricer.api.main import app
+
+    headers = {"content-type": "text/plain"}
+    token = os.environ.get("QUICKNODE_STREAM_TOKEN")
+    if token:
+        headers["x-quicknode-token"] = token
+    response = TestClient(app).post(
+        "/webhook/quicknode",
+        content=b'{"matches":[]}',
+        headers=headers,
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "accepted"

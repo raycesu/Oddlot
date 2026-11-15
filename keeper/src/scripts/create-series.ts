@@ -1,12 +1,12 @@
-/**
- * Scaffold: builds the year-end strike grid from config + Pyth spot (M3).
- */
+import { loadConfig } from "../config.js"
+import { logError } from "../log.js"
+import { ensureYearEndGrid } from "../jobs.js"
 
 const main = async () => {
-  console.log("create-series scaffold — not implemented")
+  await ensureYearEndGrid(loadConfig())
 }
 
 main().catch((error: unknown) => {
-  console.error(error)
+  logError("create_series_fatal", error)
   process.exit(1)
 })

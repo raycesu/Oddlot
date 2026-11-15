@@ -1,12 +1,12 @@
-/**
- * Scaffold: create QuickNode Stream via Streams REST API (M3).
- */
+import { loadConfig } from "../config.js"
+import { logError } from "../log.js"
+import { setupStream } from "../stream/setup.js"
 
 const main = async () => {
-  console.log("stream-setup scaffold — not implemented")
+  await setupStream(loadConfig())
 }
 
 main().catch((error: unknown) => {
-  console.error(error)
+  logError("stream_setup_fatal", error)
   process.exit(1)
 })

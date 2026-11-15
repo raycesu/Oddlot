@@ -41,6 +41,7 @@ htmlcov/
 *.log
 pricer/oddlot.db
 pricer/*.db
+keeper/data/*.json
 .turbo/
 .vercel
 .env*

@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import json
 import os
 from decimal import Decimal
 from typing import Any
 
-from fastapi import BackgroundTasks, FastAPI, Header, HTTPException
+from fastapi import BackgroundTasks, FastAPI, Header, HTTPException, Request
 
 from oddlot_pricer.api.schemas import (
     BookResponse,
@@ -181,8 +182,8 @@ def _hedge_bought_events(events: list[Any]) -> None:
 
 
 @app.post("/webhook/quicknode")
-def webhook_quicknode(
-    payload: dict[str, Any],
+async def webhook_quicknode(
+    request: Request,
     background_tasks: BackgroundTasks,
     x_quicknode_token: str | None = Header(default=None),
 ) -> dict[str, str]:
@@ -190,7 +191,16 @@ def webhook_quicknode(
     if state.stream_token:
         if x_quicknode_token != state.stream_token:
             raise HTTPException(status_code=401, detail="invalid stream token")
-    events = process_webhook_matches(payload, state.book.seen)
+    # QuickNode posts the filter JSON with no Content-Type. FastAPI would
+    # otherwise leave the body as a string and reject it with 422.
+    raw = await request.body()
+    try:
+        parsed = json.loads(raw) if raw else {}
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=400, detail="invalid json") from exc
+    if not isinstance(parsed, dict):
+        raise HTTPException(status_code=400, detail="expected object")
+    events = process_webhook_matches(parsed, state.book.seen)
     if events:
         background_tasks.add_task(_hedge_bought_events, events)
     return {"status": "accepted"}

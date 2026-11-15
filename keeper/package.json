@@ -5,14 +5,28 @@
   "description": "WS3 — quote poster, settlement, faucet, Stream setup",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/index.ts",
+    "dev": "npm run build && node dist/index.js",
     "start": "node dist/index.js",
     "build": "tsc -p tsconfig.json",
-    "create-series": "tsx src/scripts/create-series.ts",
-    "seed-demo": "tsx src/scripts/seed-demo.ts",
-    "stream-setup": "tsx src/scripts/stream-setup.ts"
+    "create-series": "npm run build && node dist/scripts/create-series.js",
+    "seed-demo": "npm run build && node dist/scripts/seed-demo.js",
+    "stream-setup": "npm run build && node dist/scripts/stream-setup.js",
+    "test": "node --import tsx --test src/money.test.ts src/grid.test.ts src/replay-math.test.ts src/stream/filter.test.ts",
+    "accept": "npm run build && node dist/scripts/accept-m3.js"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
+    "@pythnetwork/pyth-solana-receiver": "^0.17.0",
+    "@solana/spl-token": "^0.4.15",
+    "@solana/web3.js": "^1.99.0",
+    "dotenv": "^18.0.10"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
   }
 }

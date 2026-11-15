@@ -8,7 +8,7 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 
 ## Status
 
-**M0 frozen. M1 program deployed to devnet. M2 pricer unit tests pass.** Shared config, API schemas, and the program IDL are the frozen contract. The program covers vault shares, series mints, buy, settle, and exercise. The pricer covers BS + Gemini crowd quotes, Bought decode, and round-lot netting.
+**M0 frozen. M1 program deployed to devnet. M2 pricer unit tests pass. M3 keeper is running on devnet.** Shared config, API schemas, and the program IDL are the frozen contract. The program covers vault shares, series mints, buy, settle, and exercise. The pricer covers BS + Gemini crowd quotes, Bought decode, and round-lot netting. The keeper posts quotes, runs the faucet, settles demo series, and streams program logs to the pricer.
 
 ## Repo map
 
@@ -20,7 +20,7 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 | `schemas/api/` | Frozen WS2 HTTP shapes |
 | `idl/oddlot.json` | Generated program IDL |
 | `programs/oddlot/` | WS1 Anchor program |
-| `keeper/` | WS3 keeper + scripts (stubs) |
+| `keeper/` | WS3 keeper, faucet, and Stream setup |
 | `pricer/` | WS2 FastAPI pricer + hedger |
 | `app/` | WS4 Next.js scaffold |
 | `DECISIONS.md` | Agent decision log |
@@ -59,6 +59,27 @@ solana program deploy target/deploy/oddlot.so \
 ```
 
 Program id: `AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n`.
+
+```bash
+# Keeper — quote loop, settle/replay, faucet, Stream
+cd keeper
+npm install
+npm test
+npm run dev
+npm run create-series
+npm run seed-demo -- --target demo
+npm run stream-setup
+```
+
+`npm run dev` posts quotes every 15s, settles every 60s, replays the demo price every 5s, and serves `POST /faucet` on port 8787. Faucet check:
+
+```bash
+curl -s -X POST http://127.0.0.1:8787/faucet \
+  -H 'content-type: application/json' \
+  -d '{"wallet":"<pubkey>"}'
+```
+
+The QuickNode stream is `solana-devnet` / `programs_with_logs`, filtered to this program's `Program data:` logs, and posts to `https://oddlot-pricer.vercel.app/webhook/quicknode`. `npm run stream-setup` creates it. Do not create it in the QuickNode UI.
 
 Deployed 2026-11-14. Signature `oiav8FAJbeNN9qDBqk4H3eUmkqYUNPZqYaYLBvnBeWixbqtxKA9quC6WBxyxVx5VPBCS2PKwZ4CzsZ2Yw3AhQpN`. The account is executable.
 

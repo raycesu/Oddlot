@@ -21,6 +21,7 @@ const BuyPage = () => {
         <p className="mt-1 text-slate">One-share SPY calls. On-chain premium is what you pay.</p>
       </div>
       {pricer.error ? <p className="mb-4 text-sm text-danger">{pricer.error}</p> : null}
+      {seriesState.error ? <p className="mb-4 text-sm text-danger">{seriesState.error}</p> : null}
       <BuyForm
         series={seriesState.series}
         quotes={pricer.quotes?.quotes ?? []}

@@ -82,5 +82,16 @@ export const mapProgramError = (error: unknown): string => {
     return "Wallet rejected the transaction."
   }
 
+  if (
+    /insufficient funds/i.test(text) ||
+    /Attempt to debit an account but found no record of a prior credit/i.test(text)
+  ) {
+    return "Not enough test USDC for this size. Lower quantity or use the faucet."
+  }
+
+  if (/Failed to simulate|simulation failed|blocked this request/i.test(text)) {
+    return "Wallet could not simulate this buy. Check quote freshness, USDC balance, and try again."
+  }
+
   return "Transaction failed. Try again."
 }

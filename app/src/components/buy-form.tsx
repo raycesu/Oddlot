@@ -14,7 +14,14 @@ import { mapProgramError } from "@/lib/errors"
 import { dollarsFrom1e6, formatDollars, formatShares, seriesLabel, shortPremium, strikeChipLabel } from "@/lib/format"
 import type { SeriesView, VaultView } from "@/lib/pdas"
 import { cn } from "@/lib/utils"
-import { isCall, isDemoSeries, isYearEndSeries, type TokenHolding } from "@/hooks/use-series"
+import {
+  isBuyWindowOpen,
+  isCall,
+  isDemoSeries,
+  isQuoteFresh,
+  isYearEndSeries,
+  type TokenHolding,
+} from "@/hooks/use-series"
 import { useMarketStatus } from "@/hooks/use-market-status"
 
 type Mode = "year-end" | "demo"
@@ -58,7 +65,10 @@ export const BuyForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const calls = useMemo(() => {
-    const filtered = series.filter(isCall).filter((row) => (mode === "demo" ? isDemoSeries(row) : isYearEndSeries(row)))
+    const filtered = series
+      .filter(isCall)
+      .filter((row) => (mode === "demo" ? isDemoSeries(row) : isYearEndSeries(row)))
+      .filter((row) => isBuyWindowOpen(row) && isQuoteFresh(row))
     return filtered.sort((a, b) => Number(a.strike - b.strike))
   }, [series, mode])
 
@@ -72,6 +82,7 @@ export const BuyForm = ({
   const crowd = quote ? Number.parseFloat(quote.crowd_premium) : dollarsFrom1e6(selected?.crowdPremium ?? 0n)
   const usedSource = crowd >= bs ? "crowd" : "bs"
   const total = premium * BigInt(qty)
+  const hasEnoughUsdc = usdcBalance >= total
   const yearEndNeedsOpenMarket = mode === "year-end" && !market.open
 
   const handleBuy = async () => {
@@ -202,12 +213,17 @@ export const BuyForm = ({
               <div>
                 <p className="text-xs text-muted">Total</p>
                 <p className="font-mono text-lg tabular-nums">{formatDollars(total)}</p>
+                {!hasEnoughUsdc ? (
+                  <p className="mt-1 text-xs text-warn" data-testid="buy-insufficient-usdc">
+                    Need {formatDollars(total)}; wallet has {formatDollars(usdcBalance)}
+                  </p>
+                ) : null}
               </div>
               <Button
                 type="button"
                 variant="teal"
                 size="lg"
-                disabled={!selected || !vault || isSubmitting || qty < 1}
+                disabled={!selected || !vault || isSubmitting || qty < 1 || !hasEnoughUsdc}
                 onClick={() => void handleBuy()}
                 aria-label="Buy call"
                 data-testid="buy-button"

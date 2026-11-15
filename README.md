@@ -131,7 +131,7 @@ Created with `cd keeper && npm run stream-setup` (do **not** create this stream 
 
 | Source | When it burns credits | How to stay under limits |
 |--------|----------------------|---------------------------|
-| **RPC** (app reads) | Series/vault poll ~30s **only while the tab is visible**; paused when hidden | Defaults to public `NEXT_PUBLIC_READ_RPC_URL` (`https://api.devnet.solana.com`) |
+| **RPC** (app reads) | Series/vault poll ~30s **only while the tab is visible**; paused when hidden | `NEXT_PUBLIC_READ_RPC_URL` or same as `NEXT_PUBLIC_RPC_URL` (avoid public Devnet — it 429s) |
 | **RPC** (app sends) | Only on buy / protect / LP txs via wallet adapter | Optional QuickNode on `NEXT_PUBLIC_RPC_URL` for reliable confirmations during demos |
 | **RPC** (keeper) | Continuously while `npm run dev` runs (quotes 15s, settle 60s, replay 5s) | Run the keeper **only during demos / seeding**, not 24/7 |
 | **Streams** | QuickNode watches the chain; webhooks fire on **matching program txs**, not on every page view | Pause/delete the stream when idle if your plan is tight; recreating is `npm run stream-setup` |

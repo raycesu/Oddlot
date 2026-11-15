@@ -5,6 +5,7 @@ import { useMemo, useState } from "react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { TokenList } from "@/components/token-list"
 import { WalletGate } from "@/components/wallet-gate"
 import { buyOption } from "@/lib/buy"
 import { explorerTxUrl } from "@/lib/config"
@@ -12,7 +13,13 @@ import { mapProgramError } from "@/lib/errors"
 import { dollarsFrom1e6, formatDollars, formatEtDate, formatShares, seriesLabel, shortPremium } from "@/lib/format"
 import { KIND_PUT, type SeriesView, type VaultView } from "@/lib/pdas"
 import { cn } from "@/lib/utils"
-import { isDemoSeries, isYearEndSeries } from "@/hooks/use-series"
+import {
+  isBuyWindowOpen,
+  isDemoSeries,
+  isQuoteFresh,
+  isYearEndSeries,
+  type TokenHolding,
+} from "@/hooks/use-series"
 import { useMarketStatus } from "@/hooks/use-market-status"
 
 type HoldMode = "shares" | "dollars"
@@ -23,6 +30,7 @@ type ProtectFormProps = {
   spot: number
   vault: VaultView | null
   usdcBalance: bigint
+  holdings: TokenHolding[]
   isLoading: boolean
   onRefresh: () => Promise<void>
 }
@@ -32,6 +40,7 @@ export const ProtectForm = ({
   spot,
   vault,
   usdcBalance,
+  holdings,
   isLoading,
   onRefresh,
 }: ProtectFormProps) => {
@@ -50,6 +59,7 @@ export const ProtectForm = ({
       series
         .filter((row) => row.kind === KIND_PUT)
         .filter((row) => (seriesMode === "demo" ? isDemoSeries(row) : isYearEndSeries(row)))
+        .filter((row) => isBuyWindowOpen(row) && isQuoteFresh(row))
         .sort((a, b) => Number(b.strike - a.strike)),
     [series, seriesMode],
   )
@@ -90,6 +100,7 @@ export const ProtectForm = ({
   const width = selected ? dollarsFrom1e6(selected.width) : widthDollars
   const floor = Math.max(0, strike - width)
   const total = selected ? selected.premium * BigInt(shares) : 0n
+  const hasEnoughUsdc = usdcBalance >= total
   const marketBlocks = seriesMode === "year-end" && !market.open
 
   const handleBuy = async () => {
@@ -150,6 +161,14 @@ export const ProtectForm = ({
             data-testid="market-closed"
           >
             Market closed. Sales resume at 9:30 AM ET.
+          </div>
+        ) : puts.length === 0 ? (
+          <div
+            className="rounded-lg border border-line bg-surface px-4 py-6 text-center text-warn"
+            data-testid="no-live-puts"
+          >
+            No live demo puts with a fresh quote. Keep the keeper running (`cd keeper && npm run
+            dev`), then re-run `npm run seed-demo -- --target demo`.
           </div>
         ) : (
           <div className="space-y-5">
@@ -245,6 +264,12 @@ export const ProtectForm = ({
                 <p className="mt-3 font-mono text-sm text-muted">
                   Cost {shortPremium(total)} · on-chain {shortPremium(selected.premium)} / share
                 </p>
+                {!hasEnoughUsdc ? (
+                  <p className="mt-2 text-sm text-warn" data-testid="protect-insufficient-usdc">
+                    Need {shortPremium(total)} test USDC; wallet has {shortPremium(usdcBalance)}.
+                    Lower quantity or use the faucet.
+                  </p>
+                ) : null}
               </div>
             ) : null}
 
@@ -252,7 +277,7 @@ export const ProtectForm = ({
               type="button"
               variant="teal"
               size="lg"
-              disabled={!selected || !vault || shares < 1 || isSubmitting}
+              disabled={!selected || !vault || shares < 1 || !hasEnoughUsdc || isSubmitting}
               onClick={() => void handleBuy()}
               aria-label="Buy protection"
               data-testid="protect-buy-button"
@@ -262,6 +287,11 @@ export const ProtectForm = ({
           </div>
         )}
       </WalletGate>
+
+      <section>
+        <h2 className="mb-2 font-display text-xl text-ink">Your tokens</h2>
+        <TokenList holdings={holdings} />
+      </section>
     </div>
   )
 }

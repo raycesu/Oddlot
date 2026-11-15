@@ -13,7 +13,8 @@ import {
   type TradesResponse,
 } from "@/lib/api"
 
-const POLL_MS = 5_000
+/** PRD says ~5s; 10s cuts hosted-pricer + browser noise when RPC is already busy. */
+const POLL_MS = 10_000
 
 export type PricerBundle = {
   quotes: QuotesResponse | null

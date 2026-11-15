@@ -24,11 +24,13 @@ const ProtectPage = () => {
         </p>
       </div>
       {pricer.error ? <p className="mb-4 text-sm text-danger">{pricer.error}</p> : null}
+      {seriesState.error ? <p className="mb-4 text-sm text-danger">{seriesState.error}</p> : null}
       <ProtectForm
         series={seriesState.series}
         spot={spot}
         vault={vaultState.vault}
         usdcBalance={seriesState.usdcBalance}
+        holdings={seriesState.holdings}
         isLoading={seriesState.isLoading || vaultState.isLoading}
         onRefresh={handleRefresh}
       />

@@ -42,6 +42,18 @@ type MethodsBuy = {
 
 const methodsOf = (program: Program): MethodsBuy => program.methods as unknown as MethodsBuy
 
+const preflightOrThrow = async (
+  connection: Connection,
+  tx: Transaction,
+): Promise<void> => {
+  const sim = await connection.simulateTransaction(tx)
+  if (!sim.value.err) {
+    return
+  }
+  const logs = sim.value.logs?.join("\n") ?? ""
+  throw new Error(`Transaction simulation failed: ${JSON.stringify(sim.value.err)}\n${logs}`)
+}
+
 const sendLegacy = async (
   connection: Connection,
   wallet: AppWallet,
@@ -53,6 +65,8 @@ const sendLegacy = async (
     blockhash,
     lastValidBlockHeight,
   }).add(...ixs)
+  // Surface Anchor errors before Phantom's opaque "unsafe" / failed-sim UI.
+  await preflightOrThrow(connection, tx)
   const signed = await wallet.signTransaction(tx)
   const signature = await connection.sendRawTransaction(signed.serialize())
   await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed")

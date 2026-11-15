@@ -52,4 +52,13 @@ describe("program error map", () => {
       messageForErrorName("SlippageExceeded"),
     )
   })
+
+  it("maps token insufficient funds and simulation failures", () => {
+    expect(mapProgramError("Error: insufficient funds")).toBe(
+      "Not enough test USDC for this size. Lower quantity or use the faucet.",
+    )
+    expect(mapProgramError("Failed to simulate the results of this request")).toBe(
+      "Wallet could not simulate this buy. Check quote freshness, USDC balance, and try again.",
+    )
+  })
 })

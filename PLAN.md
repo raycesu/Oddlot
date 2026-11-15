@@ -1,6 +1,6 @@
 # Oddlot — architecture plan
 
-Scaffold only. No program, pricer, keeper, or web app business logic yet.
+M0–M3 backend done. M4 web app (Buy / Protect / Vault) is implemented under `app/`.
 
 Cursor rules (`.cursor/rules/`) are the agent entrypoint. The master PRD called this `AGENTS.md`; in this repo every `AGENTS.md` reference means Cursor rules.
 

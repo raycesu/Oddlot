@@ -41,3 +41,11 @@ Record agent decisions here when the PRD leaves something unspecified.
 | 2026-11-14 | Moved 0.55 SOL from the faucet keypair to the admin keypair | `create_series` metadata rent is 0.02 SOL and the admin balance was under that after deploy | WS3 |
 | 2026-11-14 | Stream dataset is `programs_with_logs` on `solana-devnet`, batch size 1, name `oddlot-devnet-program` | The full `block` dataset terminated with no error. This dataset's max batch size is 1. The filter keeps `Program data:` logs for the Oddlot program and posts `{ matches }` to the pricer. The plan's one stream slot is the reason a terminated stream is deleted and recreated | WS3 |
 | 2026-11-14 | Pricer parses the webhook body itself and does not require `Content-Type: application/json` | QuickNode sends the filter JSON with no content type. FastAPI then rejects the body with 422, retries, and terminates the stream | WS3 |
+| 2026-11-14 | WS4 copies PDA/money/buy helpers into `app/src/lib` instead of a shared package | Fastest path for the hackathon; keeper stays the source of truth for crank logic | WS4 |
+| 2026-11-14 | App syncs `idl/oddlot.json` + `config/oddlot.json` into `app/src/data` on predev/prebuild | Next.js resolves JSON inside the app tree reliably; sync keeps frozen contracts in sync | WS4 |
+| 2026-11-14 | Year-end Pyth updates go through Next route `/api/pyth-latest` with server `PYTH_API_KEY` | Hermes needs a Bearer token; keep the key off the client | WS4 |
+| 2026-11-14 | Stub `@pythnetwork/solana-utils` jito via webpack `NormalModuleReplacementPlugin` | `pyth-solana-receiver` pulls `jito-ts` / broken `rpc-websockets` paths into the Next bundle | WS4 |
+| 2026-11-14 | Wallet Standard auto-detect (empty adapter list) instead of `@solana/wallet-adapter-wallets` | Avoids WalletConnect/viem tree in the Buy bundle; Phantom still appears | WS4 |
+| 2026-11-14 | Protect defaults to demo series mode | Saturday finals use `--target demo`; year-end remains selectable | WS4 |
+| 2026-11-14 | Defer P1 Vault charts (crowd vs WS, LP P&L) past M4 | Cut order says P1 charts after Protect; solvency/netting/tape ship in P0 | WS4 |
+| 2026-11-15 | Pricer FastAPI enables CORS `*` | Browser on `:3000` fetches `:8000`; without CORS every screen showed `Failed to fetch`. Matches keeper faucet | WS2/WS4 |

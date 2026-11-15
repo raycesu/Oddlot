@@ -8,7 +8,7 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 
 ## Status
 
-**M0 frozen. M1 program deployed to devnet. M2 pricer unit tests pass. M3 keeper is running on devnet.** Shared config, API schemas, and the program IDL are the frozen contract. The program covers vault shares, series mints, buy, settle, and exercise. The pricer covers BS + Gemini crowd quotes, Bought decode, and round-lot netting. The keeper posts quotes, runs the faucet, settles demo series, and streams program logs to the pricer.
+**M0–M3 done. M4 web app is runnable.** Shared config, API schemas, and the program IDL are the frozen contract. The program covers vault shares, series mints, buy, settle, and exercise. The pricer covers BS + Gemini crowd quotes, Bought decode, and round-lot netting. The keeper posts quotes, runs the faucet, settles demo series, and streams program logs to the pricer. The web app serves Buy / Protect / Vault on Phantom + devnet.
 
 ## Repo map
 
@@ -22,7 +22,7 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 | `programs/oddlot/` | WS1 Anchor program |
 | `keeper/` | WS3 keeper, faucet, and Stream setup |
 | `pricer/` | WS2 FastAPI pricer + hedger |
-| `app/` | WS4 Next.js scaffold |
+| `app/` | WS4 Next.js Buy / Protect / Vault |
 | `DECISIONS.md` | Agent decision log |
 
 ## Quick links
@@ -82,6 +82,20 @@ curl -s -X POST http://127.0.0.1:8787/faucet \
 The QuickNode stream is `solana-devnet` / `programs_with_logs`, filtered to this program's `Program data:` logs, and posts to `https://oddlot-pricer.vercel.app/webhook/quicknode`. `npm run stream-setup` creates it. Do not create it in the QuickNode UI.
 
 Deployed 2026-11-14. Signature `oiav8FAJbeNN9qDBqk4H3eUmkqYUNPZqYaYLBvnBeWixbqtxKA9quC6WBxyxVx5VPBCS2PKwZ4CzsZ2Yw3AhQpN`. The account is executable.
+
+```bash
+# Web app — Buy / Protect / Vault (M4)
+cd app
+cp .env.example .env.local
+# Set NEXT_PUBLIC_RPC_URL, NEXT_PUBLIC_PROGRAM_ID, NEXT_PUBLIC_PRICER_URL,
+# NEXT_PUBLIC_KEEPER_URL. Year-end buys also need PYTH_API_KEY.
+npm install
+npm run dev
+npm test
+npm run test:e2e
+```
+
+Open http://127.0.0.1:3000 (redirects to Protect). Manual gate: Phantom on devnet completes a buy on Buy and on Protect.
 
 ## Human setup checklist
 

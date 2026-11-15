@@ -8,6 +8,7 @@ from decimal import Decimal
 from typing import Any
 
 from fastapi import BackgroundTasks, FastAPI, Header, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 
 from oddlot_pricer.api.schemas import (
     BookResponse,
@@ -33,6 +34,15 @@ from oddlot_pricer.pricing.market_data import (
 )
 
 app = FastAPI(title="Oddlot Pricer", version="0.2.0")
+
+# Browser app (localhost:3000) fetches this API on :8000 — different origin.
+# Match keeper faucet: allow any origin for local demo / hackathon hosting.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class PricerState:

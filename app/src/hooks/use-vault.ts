@@ -1,11 +1,12 @@
 "use client"
 
-import { useConnection } from "@solana/wallet-adapter-react"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 
-import { createReadonlyProgram, fetchVaultView } from "@/lib/program"
+import { createReadConnection, createReadonlyProgram, fetchVaultView } from "@/lib/program"
 import type { VaultView } from "@/lib/pdas"
 import { TOKEN_PROGRAM_ID, getAccount } from "@solana/spl-token"
+
+import { useVisibilityPoll } from "./use-visibility-poll"
 
 export type VaultState = {
   vault: VaultView | null
@@ -16,7 +17,6 @@ export type VaultState = {
 }
 
 export const useVault = (): VaultState => {
-  const { connection } = useConnection()
   const [vault, setVault] = useState<VaultView | null>(null)
   const [usdcHeld, setUsdcHeld] = useState(0n)
   const [isLoading, setIsLoading] = useState(true)
@@ -24,6 +24,7 @@ export const useVault = (): VaultState => {
 
   const refresh = useCallback(async () => {
     try {
+      const connection = createReadConnection()
       const program = createReadonlyProgram(connection)
       const next = await fetchVaultView(program)
       setVault(next)
@@ -39,15 +40,9 @@ export const useVault = (): VaultState => {
     } finally {
       setIsLoading(false)
     }
-  }, [connection])
+  }, [])
 
-  useEffect(() => {
-    void refresh()
-    const timer = window.setInterval(() => {
-      void refresh()
-    }, 10_000)
-    return () => window.clearInterval(timer)
-  }, [refresh])
+  useVisibilityPoll(refresh)
 
   return { vault, usdcHeld, isLoading, error, refresh }
 }

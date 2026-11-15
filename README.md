@@ -125,7 +125,8 @@ Created with `cd keeper && npm run stream-setup` (do **not** create this stream 
 
 | Source | When it burns credits | How to stay under limits |
 |--------|----------------------|---------------------------|
-| **RPC** (app) | Only while a browser tab is open (series/vault poll ~10s) | Prefer public `https://api.devnet.solana.com` for the app; save QuickNode RPC for the keeper |
+| **RPC** (app reads) | Series/vault poll ~30s **only while the tab is visible**; paused when hidden | Defaults to public `NEXT_PUBLIC_READ_RPC_URL` (`https://api.devnet.solana.com`) |
+| **RPC** (app sends) | Only on buy / protect / LP txs via wallet adapter | Optional QuickNode on `NEXT_PUBLIC_RPC_URL` for reliable confirmations during demos |
 | **RPC** (keeper) | Continuously while `npm run dev` runs (quotes 15s, settle 60s, replay 5s) | Run the keeper **only during demos / seeding**, not 24/7 |
 | **Streams** | QuickNode watches the chain; webhooks fire on **matching program txs**, not on every page view | Pause/delete the stream when idle if your plan is tight; recreating is `npm run stream-setup` |
 | **Pricer on Vercel** | Invoked on HTTP requests (app polls every 5s **while a tab is open**) + Stream webhooks | Closing the tab stops app→pricer traffic; Stream still only hits on chain activity |
@@ -164,7 +165,8 @@ cd keeper && npm install && npm run dev
 # 2) Web app — another terminal
 cd app
 cp .env.example .env.local
-# NEXT_PUBLIC_RPC_URL=https://api.devnet.solana.com
+# NEXT_PUBLIC_RPC_URL=https://api.devnet.solana.com   # or QuickNode for wallet sends
+# NEXT_PUBLIC_READ_RPC_URL=https://api.devnet.solana.com  # polling reads (keep public)
 # NEXT_PUBLIC_PROGRAM_ID=AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n
 # NEXT_PUBLIC_PRICER_URL=https://oddlot-pricer.vercel.app
 # NEXT_PUBLIC_KEEPER_URL=http://127.0.0.1:8787
@@ -222,7 +224,7 @@ cd ../pricer && source .venv/bin/activate && pytest
 
 | Service | Host | Env highlights |
 |---------|------|----------------|
-| Web app | Vercel (root `app/`) | `NEXT_PUBLIC_*` → public RPC or QuickNode; `NEXT_PUBLIC_PRICER_URL` → hosted pricer; `NEXT_PUBLIC_KEEPER_URL` → **public** keeper URL (not localhost); `PYTH_API_KEY` server-side |
+| Web app | Vercel (root `app/`) | `NEXT_PUBLIC_RPC_URL` → optional QuickNode (sends); leave `NEXT_PUBLIC_READ_RPC_URL` public/unset; `NEXT_PUBLIC_PRICER_URL` → hosted pricer; `NEXT_PUBLIC_KEEPER_URL` → **public** keeper URL (not localhost); `PYTH_API_KEY` server-side |
 | Pricer | Vercel (root `pricer/`) | Already at https://oddlot-pricer.vercel.app |
 | Keeper | Railway / Render / laptop | Same `.env` as local; must stay process-alive for quotes + faucet |
 

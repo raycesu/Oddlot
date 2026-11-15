@@ -1,6 +1,6 @@
 "use client"
 
-import { useConnection, useWallet } from "@solana/wallet-adapter-react"
+import { useWallet } from "@solana/wallet-adapter-react"
 import {
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -8,11 +8,13 @@ import {
   getAssociatedTokenAddressSync,
 } from "@solana/spl-token"
 import { PublicKey } from "@solana/web3.js"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 
 import { appConfig } from "@/lib/config"
 import { KIND_CALL, ORACLE_DEMO, ORACLE_PYTH, type SeriesView } from "@/lib/pdas"
-import { createReadonlyProgram, listSeriesViews } from "@/lib/program"
+import { createReadConnection, createReadonlyProgram, listSeriesViews } from "@/lib/program"
+
+import { useVisibilityPoll } from "./use-visibility-poll"
 
 export type TokenHolding = {
   series: SeriesView
@@ -29,7 +31,6 @@ export type SeriesState = {
 }
 
 export const useSeries = (): SeriesState => {
-  const { connection } = useConnection()
   const { publicKey } = useWallet()
   const [series, setSeries] = useState<SeriesView[]>([])
   const [holdings, setHoldings] = useState<TokenHolding[]>([])
@@ -39,6 +40,7 @@ export const useSeries = (): SeriesState => {
 
   const refresh = useCallback(async () => {
     try {
+      const connection = createReadConnection()
       const program = createReadonlyProgram(connection)
       const rows = await listSeriesViews(program)
       const live = rows.filter((row) => !row.settled)
@@ -86,15 +88,9 @@ export const useSeries = (): SeriesState => {
     } finally {
       setIsLoading(false)
     }
-  }, [connection, publicKey])
+  }, [publicKey])
 
-  useEffect(() => {
-    void refresh()
-    const timer = window.setInterval(() => {
-      void refresh()
-    }, 10_000)
-    return () => window.clearInterval(timer)
-  }, [refresh])
+  useVisibilityPoll(refresh)
 
   return { series, holdings, usdcBalance, isLoading, error, refresh }
 }

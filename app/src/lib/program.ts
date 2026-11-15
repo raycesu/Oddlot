@@ -11,6 +11,17 @@ export const getProgramId = (): PublicKey => new PublicKey(appConfig.programId)
 export const createConnection = (): Connection =>
   new Connection(appConfig.rpcUrl, "confirmed")
 
+let readConnection: Connection | null = null
+
+/** Shared Connection for series/vault polling (separate from wallet send RPC). */
+export const createReadConnection = (): Connection => {
+  if (readConnection) {
+    return readConnection
+  }
+  readConnection = new Connection(appConfig.readRpcUrl, "confirmed")
+  return readConnection
+}
+
 export const createProgram = (connection: Connection, wallet: AppWallet): Program => {
   const provider = new AnchorProvider(connection, wallet as never, { commitment: "confirmed" })
   return new Program(idlJson as Idl, provider)

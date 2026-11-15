@@ -6,6 +6,8 @@ export const fileConfig: OddlotFileConfig = oddlotConfig
 
 export const appConfig = {
   rpcUrl: process.env.NEXT_PUBLIC_RPC_URL || "https://api.devnet.solana.com",
+  /** Polling / read-only RPC; defaults to public so QuickNode credits stay for wallet sends. */
+  readRpcUrl: process.env.NEXT_PUBLIC_READ_RPC_URL || "https://api.devnet.solana.com",
   programId: process.env.NEXT_PUBLIC_PROGRAM_ID || fileConfig.program_id,
   pricerUrl: (process.env.NEXT_PUBLIC_PRICER_URL || "http://127.0.0.1:8000").replace(/\/$/, ""),
   keeperUrl: (process.env.NEXT_PUBLIC_KEEPER_URL || "http://127.0.0.1:8787").replace(/\/$/, ""),

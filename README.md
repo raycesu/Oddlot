@@ -8,10 +8,28 @@ Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · 
 
 | | |
 |--|--|
-| **Program (devnet)** | [`AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n`](https://explorer.solana.com/address/AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n?cluster=devnet) |
+| **App (hosted)** | https://oddlot-vault.vercel.app → [Puts](https://oddlot-vault.vercel.app/protect) · [Calls](https://oddlot-vault.vercel.app/buy) · [Vault](https://oddlot-vault.vercel.app/vault) |
 | **Pricer (hosted)** | https://oddlot-pricer.vercel.app |
-| **Local app** | http://127.0.0.1:3000 → Puts / Calls / Vault |
+| **Program (devnet)** | [`AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n`](https://explorer.solana.com/address/AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n?cluster=devnet) |
 | **Cluster** | Solana **devnet** · test USDC only · no mainnet / real funds |
+
+### Try the public demo
+
+1. Open **https://oddlot-vault.vercel.app** (Phantom set to **Devnet**).
+2. App + pricer are already on Vercel — no need to run those locally.
+3. Before a live demo (buys / fresh quotes / faucet / settle), **start the keeper** (laptop is fine; Railway/Render if you want a public URL). Stop it when idle so you do not burn RPC credits 24/7.
+4. Connect wallet → **Puts** (exact-share puts) / **Calls** / **Vault** (deposit, solvency, netting, tape).
+5. Add more call/put series later with `keeper` scripts (`create-series`, `seed-demo`) — no app redeploy required.
+
+| Piece | Status | What you do |
+|-------|--------|-------------|
+| Web app | **Live** on Vercel | https://oddlot-vault.vercel.app |
+| Pricer | **Live** on Vercel | Already wired; no action for demos |
+| Anchor program | **Live** on devnet | No redeploy for judges |
+| Keeper + faucet | **Start only for demos** | `cd keeper && npm run dev` on your laptop, or Railway/Render; then set `NEXT_PUBLIC_KEEPER_URL` on the Vercel app if judges need the faucet from the hosted site |
+| QuickNode Stream | Optional / already set up | Webhooks to pricer on matching txs only |
+
+Without the keeper running, users can still open the site and browse Vault/series, but **buys need fresh on-chain quotes** (keeper posts ~every 15s), and the **test USDC faucet** only works when a keeper URL is reachable.
 
 ---
 
@@ -44,19 +62,7 @@ Browser (Next.js) ──RPC──► Solana program (vault, series, buy, settle)
 2. **Buy** — Program checks market hours, fresh quote, utilization; takes premium; **locks max payout**; mints Token-2022 option tokens  
 3. **Stream** — QuickNode delivers `Bought` to the pricer hedger  
 4. **Hedge** — Every 100 tokens → one listed SPY spread (paper); leftovers via Gemini (year-end) or SPYx delta  
-5. **Settle** — Keeper settles with Pyth (or demo oracle); permanent delegate auto-pays holders  
-
-**What must be running for a full demo**
-
-| Piece | Already live? | Notes |
-|-------|---------------|--------|
-| Anchor program | Yes (devnet) | No redeploy needed for judges |
-| Pricer | Yes on Vercel **or** run local | App points at `NEXT_PUBLIC_PRICER_URL` |
-| Keeper + faucet | **You run it** (local or Railway/Render) | Continuous process — not Vercel serverless |
-| Web app | Local `npm run dev` **or** deploy to Vercel | Judges need a public URL for submission |
-| QuickNode Stream | Created once via `npm run stream-setup` | Pushes to pricer webhook only on matching txs |
-
-You do **not** need to redeploy the pricer to open the project. For local work: run app + keeper locally and either hit the hosted pricer or run a local pricer. For a public demo: deploy the **app** (Vercel), keep the **pricer** on Vercel, and host the **keeper** somewhere that stays up (laptop during the pitch is fine; Railway/Render for always-on).
+5. **Settle** — Keeper settles with Pyth (or demo oracle); permanent delegate auto-pays holders
 
 ---
 
@@ -220,13 +226,15 @@ cd ../keeper && npm test
 cd ../pricer && source .venv/bin/activate && pytest
 ```
 
-### Public demo hosting (optional)
+### Public hosting (current)
 
-| Service | Host | Env highlights |
-|---------|------|----------------|
-| Web app | Vercel (root `app/`) | `NEXT_PUBLIC_RPC_URL` → optional QuickNode (sends); leave `NEXT_PUBLIC_READ_RPC_URL` public/unset; `NEXT_PUBLIC_PRICER_URL` → hosted pricer; `NEXT_PUBLIC_KEEPER_URL` → **public** keeper URL (not localhost); `PYTH_API_KEY` server-side |
-| Pricer | Vercel (root `pricer/`) | Already at https://oddlot-pricer.vercel.app |
-| Keeper | Railway / Render / laptop | Same `.env` as local; must stay process-alive for quotes + faucet |
+| Service | Host | Status |
+|---------|------|--------|
+| Web app | Vercel (`app/`) → https://oddlot-vault.vercel.app | **Deployed** — env: `NEXT_PUBLIC_PRICER_URL=https://oddlot-pricer.vercel.app`, public/optional QuickNode RPC, `NEXT_PUBLIC_READ_RPC_URL` public; add `NEXT_PUBLIC_KEEPER_URL` when the keeper has a public URL; `PYTH_API_KEY` optional (year-end only) |
+| Pricer | Vercel (`pricer/`) → https://oddlot-pricer.vercel.app | **Deployed** |
+| Keeper | Laptop during the pitch, or Railway/Render | **On-demand** — same `.env` as local; keep it off when idle |
+
+**Demo checklist:** open the app URL → start keeper → connect Phantom (devnet) → buy puts / use vault. Seed extra series anytime with `npm run create-series` / `npm run seed-demo` from `keeper/`.
 
 ---
 

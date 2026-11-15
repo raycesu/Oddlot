@@ -52,3 +52,4 @@ Record agent decisions here when the PRD leaves something unspecified.
 | 2026-11-15 | UI labels: Protect→Puts / Put options, Buy→Calls / Call options; routes stay `/protect` and `/buy` | Clearer put vs call signal without breaking URLs, e2e paths, or PRD route refs | WS4 |
 | 2026-11-15 | Root README expanded to PRD submission outline + quota notes | Judges need run/economics/addresses/Solana/Gemini/Stream; clarify Vercel pricer vs always-on keeper vs page-open RPC | Docs |
 | 2026-11-15 | App RPC: 30s visibility-paused polls + dual RPC (`READ` public, `RPC` for wallet sends) | Cuts QuickNode credit burn when judges leave tabs open; sends can still use QuickNode | WS4 |
+| 2026-11-15 | Public app URL https://oddlot-vault.vercel.app; README demo path = Vercel app+pricer, on-demand keeper | Judges open hosted app; operator starts keeper only for live quotes/faucet | Docs |

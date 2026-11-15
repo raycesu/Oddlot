@@ -17,7 +17,7 @@ const BuyPage = () => {
   return (
     <div data-testid="buy-page">
       <div className="mb-6">
-        <h1 className="font-display text-3xl text-ink">Buy</h1>
+        <h1 className="font-display text-3xl text-ink">Call options</h1>
         <p className="mt-1 text-slate">One-share SPY calls. On-chain premium is what you pay.</p>
       </div>
       {pricer.error ? <p className="mb-4 text-sm text-danger">{pricer.error}</p> : null}

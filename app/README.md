@@ -6,8 +6,8 @@ Next.js (App Router) + TypeScript + Tailwind + Solana wallet adapter (Phantom vi
 
 | Screen | Job |
 |--------|-----|
-| Buy | Call series picker, BS vs crowd, quantity, buy tx |
-| Protect | Exact-share puts for advisors (lead demo: 44 shares) |
+| Calls (`/buy`) | Call series picker, BS vs crowd, quantity, buy tx |
+| Puts (`/protect`) | Exact-share puts for advisors (lead demo: 44 shares) |
 | Vault | Solvency panel, LP deposit/withdraw, netting meter, trade tape |
 
 ## Run
@@ -30,4 +30,4 @@ npm run build
 
 ## Manual M4 gate
 
-Phantom on **devnet**: complete a buy on **Buy** and on **Protect**.
+Phantom on **devnet**: complete a buy on **Calls** and on **Puts**.

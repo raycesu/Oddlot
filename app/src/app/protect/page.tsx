@@ -18,7 +18,7 @@ const ProtectPage = () => {
   return (
     <div data-testid="protect-page">
       <div className="mb-6">
-        <h1 className="font-display text-3xl text-ink">Protect</h1>
+        <h1 className="font-display text-3xl text-ink">Put options</h1>
         <p className="mt-1 text-slate">
           Exact-share puts for advisors — cover 44 shares in one transaction.
         </p>

@@ -49,3 +49,5 @@ Record agent decisions here when the PRD leaves something unspecified.
 | 2026-11-14 | Protect defaults to demo series mode | Saturday finals use `--target demo`; year-end remains selectable | WS4 |
 | 2026-11-14 | Defer P1 Vault charts (crowd vs WS, LP P&L) past M4 | Cut order says P1 charts after Protect; solvency/netting/tape ship in P0 | WS4 |
 | 2026-11-15 | Pricer FastAPI enables CORS `*` | Browser on `:3000` fetches `:8000`; without CORS every screen showed `Failed to fetch`. Matches keeper faucet | WS2/WS4 |
+| 2026-11-15 | UI labels: Protect→Puts / Put options, Buy→Calls / Call options; routes stay `/protect` and `/buy` | Clearer put vs call signal without breaking URLs, e2e paths, or PRD route refs | WS4 |
+| 2026-11-15 | Root README expanded to PRD submission outline + quota notes | Judges need run/economics/addresses/Solana/Gemini/Stream; clarify Vercel pricer vs always-on keeper vs page-open RPC | Docs |

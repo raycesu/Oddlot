@@ -22,8 +22,8 @@ const WalletMultiButton = dynamic(
 )
 
 const NAV = [
-  { href: "/protect", label: "Protect" },
-  { href: "/buy", label: "Buy" },
+  { href: "/protect", label: "Puts" },
+  { href: "/buy", label: "Calls" },
   { href: "/vault", label: "Vault" },
 ]
 

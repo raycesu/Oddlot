@@ -16,7 +16,7 @@
     "accept": "vitest run && playwright test"
   },
   "engines": {
-    "node": ">=20"
+    "node": "20.x"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",
@@ -29,6 +29,7 @@
     "@solana/web3.js": "^1.99.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "geist": "^1.9.2",
     "lucide-react": "^0.544.0",
     "next": "^15.5.4",
     "react": "^19.1.1",

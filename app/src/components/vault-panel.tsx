@@ -125,17 +125,17 @@ export const VaultPanel = ({
   return (
     <div className="space-y-8">
       <section className="grid gap-4 sm:grid-cols-3" data-testid="solvency-panel">
-        <div className="rounded-lg border border-line bg-surface p-4">
+        <div className="panel p-4">
           <p className="text-xs uppercase tracking-wide text-muted">USDC held</p>
           <p className="mt-1 font-mono text-2xl tabular-nums text-ink">{formatDollars(usdcHeld)}</p>
         </div>
-        <div className="rounded-lg border border-line bg-surface p-4">
+        <div className="panel p-4">
           <p className="text-xs uppercase tracking-wide text-muted">Max payout owed</p>
           <p className="mt-1 font-mono text-2xl tabular-nums text-ink">
             {formatDollars(vault?.totalLocked ?? 0n)}
           </p>
         </div>
-        <div className="rounded-lg border border-line bg-surface p-4">
+        <div className="panel p-4">
           <p className="text-xs uppercase tracking-wide text-muted">Coverage</p>
           <p className="mt-1 font-mono text-2xl tabular-nums text-ok">
             {coverage === Number.POSITIVE_INFINITY
@@ -146,8 +146,8 @@ export const VaultPanel = ({
         </div>
       </section>
 
-      <section className="rounded-lg border border-line bg-surface p-4">
-        <h2 className="mb-3 font-display text-xl text-ink">LP deposit / withdraw</h2>
+      <section className="panel p-4">
+        <h2 className="mb-3 text-xl font-medium tracking-tight text-ink">LP deposit / withdraw</h2>
         {!connected ? (
           <p className="text-sm text-muted" data-testid="wallet-disconnected">
             Connect a wallet to deposit
@@ -210,12 +210,12 @@ export const VaultPanel = ({
       </section>
 
       <section>
-        <h2 className="mb-3 font-display text-xl text-ink">Netting meter</h2>
+        <h2 className="mb-3 text-xl font-medium tracking-tight text-ink">Netting meter</h2>
         <NettingMeter rows={book?.series ?? []} />
       </section>
 
       <section>
-        <h2 className="mb-3 font-display text-xl text-ink">Trade tape</h2>
+        <h2 className="mb-3 text-xl font-medium tracking-tight text-ink">Trade tape</h2>
         <TradeTape trades={trades?.trades ?? []} />
       </section>
     </div>

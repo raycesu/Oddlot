@@ -14,7 +14,7 @@ export const TradeTape = ({ trades }: TradeTapeProps) => {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-line bg-surface" data-testid="trade-tape">
+    <div className="overflow-x-auto panel" data-testid="trade-tape">
       <table className="min-w-full text-left text-sm">
         <thead className="border-b border-line text-xs uppercase tracking-wide text-muted">
           <tr>

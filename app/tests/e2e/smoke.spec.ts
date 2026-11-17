@@ -84,7 +84,7 @@ test.describe("M4 smoke — disconnected", () => {
   })
 
   test("Buy shows connect prompt", async ({ page }) => {
-    await page.goto("/buy")
+    await page.goto("/trade?side=call")
     await expect(page.getByTestId("buy-page")).toBeVisible()
     await expect(page.getByTestId("wallet-disconnected")).toContainText("Connect a wallet to buy")
     await expect(page.getByTestId("devnet-badge")).toBeVisible()
@@ -92,7 +92,7 @@ test.describe("M4 smoke — disconnected", () => {
   })
 
   test("Protect shows connect prompt", async ({ page }) => {
-    await page.goto("/protect")
+    await page.goto("/trade?side=put")
     await expect(page.getByTestId("protect-page")).toBeVisible()
     await expect(page.getByTestId("wallet-disconnected")).toContainText("Connect a wallet to buy")
   })
@@ -109,7 +109,7 @@ test.describe("M4 smoke — disconnected", () => {
 test.describe("M4 smoke — mocked no-USDC and market-closed via query flags", () => {
   test("Buy no-USDC state via e2e flag on WalletGate", async ({ page }) => {
     await mockPricer(page)
-    await page.goto("/buy?e2e=no-usdc")
+    await page.goto("/trade?side=call&e2e=no-usdc")
     await expect(page.getByTestId("buy-page")).toBeVisible()
     // Without a real wallet adapter mock, disconnected is the safe default.
     // The no-USDC + market-closed branches are covered by component fixtures below.

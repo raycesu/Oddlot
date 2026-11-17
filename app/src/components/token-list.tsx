@@ -17,7 +17,7 @@ export const TokenList = ({ holdings }: TokenListProps) => {
   }
 
   return (
-    <ul className="divide-y divide-line rounded-lg border border-line bg-surface" data-testid="token-list">
+    <ul className="divide-y divide-line panel" data-testid="token-list">
       {holdings.map((row) => (
         <li key={row.series.address.toBase58()} className="flex items-center justify-between gap-3 px-4 py-3">
           <div>

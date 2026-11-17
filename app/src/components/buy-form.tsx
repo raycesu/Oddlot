@@ -123,8 +123,8 @@ export const BuyForm = ({
             role="tab"
             aria-selected={mode === item}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm font-medium capitalize",
-              mode === item ? "bg-ink text-white" : "bg-surface text-slate border border-line",
+              "rounded-full px-3 py-1.5 text-sm font-medium capitalize",
+              mode === item ? "halo-blue" : "rounded-full border border-line bg-surface text-slate",
             )}
             onClick={() => {
               setMode(item)
@@ -139,7 +139,7 @@ export const BuyForm = ({
       <WalletGate usdcBalance={usdcBalance} isLoading={isLoading} onFunded={() => void onRefresh()}>
         {yearEndNeedsOpenMarket ? (
           <div
-            className="rounded-lg border border-line bg-surface px-4 py-6 text-center text-warn"
+            className="panel px-4 py-6 text-center text-warn"
             data-testid="market-closed"
           >
             Market closed. Sales resume at 9:30 AM ET.
@@ -161,9 +161,9 @@ export const BuyForm = ({
                         role="option"
                         aria-selected={Boolean(active)}
                         className={cn(
-                          "rounded-md border px-3 py-1.5 font-mono text-sm tabular-nums",
+                          "rounded-full border px-3 py-1.5 font-mono text-sm tabular-nums",
                           active
-                            ? "border-teal bg-teal-soft text-teal"
+                            ? "halo-blue"
                             : "border-line bg-surface text-ink hover:border-teal/40",
                         )}
                         onClick={() => setSelectedKey(row.address.toBase58())}
@@ -177,21 +177,21 @@ export const BuyForm = ({
             </div>
 
             {selected ? (
-              <div className="rounded-lg border border-line bg-surface p-4" data-testid="price-card">
+              <div className="panel p-4" data-testid="price-card">
                 <p className="text-lg font-medium text-ink">
                   1 share for {shortPremium(premium)} · a listed contract of 100 shares costs about{" "}
                   {formatDollars(dollarsFrom1e6(premium) * 100)}
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className={cn("rounded-md border p-3", usedSource === "bs" && "border-teal bg-teal-soft/40")}>
+                  <div className={cn("rounded-md border p-3", usedSource === "bs" && "border-warn bg-teal-soft/40")}>
                     <p className="text-xs uppercase tracking-wide text-muted">Black–Scholes</p>
                     <p className="font-mono text-lg tabular-nums">{formatDollars(bs)}</p>
-                    {usedSource === "bs" ? <p className="text-xs font-medium text-teal">used</p> : null}
+                    {usedSource === "bs" ? <p className="text-xs font-medium text-warn">used</p> : null}
                   </div>
-                  <div className={cn("rounded-md border p-3", usedSource === "crowd" && "border-teal bg-teal-soft/40")}>
+                  <div className={cn("rounded-md border p-3", usedSource === "crowd" && "border-warn bg-teal-soft/40")}>
                     <p className="text-xs uppercase tracking-wide text-muted">Crowd</p>
                     <p className="font-mono text-lg tabular-nums">{formatDollars(crowd)}</p>
-                    {usedSource === "crowd" ? <p className="text-xs font-medium text-teal">used</p> : null}
+                    {usedSource === "crowd" ? <p className="text-xs font-medium text-warn">used</p> : null}
                   </div>
                 </div>
               </div>
@@ -236,7 +236,7 @@ export const BuyForm = ({
       </WalletGate>
 
       <section>
-        <h2 className="mb-2 font-display text-xl text-ink">Your tokens</h2>
+        <h2 className="mb-2 text-xl font-medium tracking-tight text-ink">Your tokens</h2>
         <TokenList holdings={holdings} />
       </section>
     </div>

@@ -1,21 +1,19 @@
 import type { Metadata } from "next"
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google"
+import { Fraunces, Geist, Geist_Mono } from "next/font/google"
 
 import { Header } from "@/components/header"
 import { Providers } from "@/components/providers"
 
 import "./globals.css"
 
-const plexSans = IBM_Plex_Sans({
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-sans",
+  variable: "--font-geist",
 })
 
-const plexMono = IBM_Plex_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-plex-mono",
+  variable: "--font-geist-mono",
 })
 
 const fraunces = Fraunces({
@@ -35,7 +33,7 @@ type RootLayoutProps = {
 
 const RootLayout = ({ children }: RootLayoutProps) => (
   <html lang="en">
-    <body className={`${plexSans.variable} ${plexMono.variable} ${fraunces.variable} antialiased`}>
+    <body className={`${geist.variable} ${geistMono.variable} ${fraunces.variable} antialiased`}>
       <Providers>
         <Header />
         <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">{children}</main>

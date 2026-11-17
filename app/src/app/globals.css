@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --od-ink: #0f1720;
-  --od-slate: #243040;
-  --od-muted: #5b6b7c;
-  --od-line: #d7dde5;
-  --od-paper: #f4f7fa;
+  --od-ink: #09080d;
+  --od-slate: #3c3a44;
+  --od-muted: #6d6a76;
+  --od-line: rgba(9, 8, 13, 0.08);
+  --od-paper: #f6f6f7;
   --od-surface: #ffffff;
-  --od-teal: #0f766e;
-  --od-teal-soft: #ccfbf1;
-  --od-warn: #b45309;
-  --od-danger: #b91c1c;
-  --od-ok: #15803d;
+  --od-teal: #191bdf;
+  --od-teal-soft: rgba(25, 27, 223, 0.08);
+  --od-warn: #fe6807;
+  --od-danger: #fe6807;
+  --od-ok: #191bdf;
   --background: var(--od-paper);
   --foreground: var(--od-ink);
 }
@@ -30,17 +30,17 @@
   --color-warn: var(--od-warn);
   --color-danger: var(--od-danger);
   --color-ok: var(--od-ok);
-  --font-sans: var(--font-plex-sans), "Segoe UI", sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-sans: var(--font-geist), "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-display: var(--font-fraunces), "Times New Roman", serif;
 }
 
 .font-display {
-  font-family: var(--font-display);
+  font-family: var(--font-fraunces), "Times New Roman", serif;
 }
 
 .font-mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 * {
@@ -51,12 +51,13 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+  color-scheme: light;
   background:
-    radial-gradient(1200px 500px at 10% -10%, rgba(15, 118, 110, 0.12), transparent 55%),
-    radial-gradient(900px 400px at 100% 0%, rgba(36, 48, 64, 0.08), transparent 50%),
+    radial-gradient(900px 420px at 0% -10%, rgba(25, 27, 223, 0.12), transparent 55%),
+    radial-gradient(800px 380px at 100% 0%, rgba(254, 104, 7, 0.1), transparent 50%),
     var(--od-paper);
   color: var(--od-ink);
-  font-family: var(--font-sans);
+  font-family: var(--font-geist), "Segoe UI", sans-serif;
 }
 
 body {
@@ -73,18 +74,96 @@ button:disabled {
   opacity: 0.55;
 }
 
+input,
+select,
+textarea {
+  color: var(--od-ink);
+}
+
+.panel {
+  border-radius: 1rem;
+  border: 1px solid var(--od-line);
+  background: var(--od-surface);
+  box-shadow:
+    0 1px 2px rgba(9, 8, 13, 0.04),
+    0 10px 28px rgba(25, 27, 223, 0.06);
+}
+
+.panel-dashed {
+  border-style: dashed;
+}
+
+.halo-blue,
+.halo-orange {
+  background: #ffffff;
+  color: #09080d;
+  border-radius: 9999px;
+  transition:
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.halo-blue {
+  border: 1px solid #191bdf;
+  box-shadow:
+    0 0 0 3px rgba(25, 27, 223, 0.16),
+    0 8px 24px rgba(25, 27, 223, 0.14);
+}
+
+.halo-blue:hover {
+  box-shadow:
+    0 0 0 4px rgba(25, 27, 223, 0.24),
+    0 12px 28px rgba(25, 27, 223, 0.22);
+}
+
+.halo-orange {
+  border: 1px solid #fe6807;
+  box-shadow:
+    0 0 0 3px rgba(254, 104, 7, 0.16),
+    0 8px 24px rgba(254, 104, 7, 0.12);
+}
+
+.halo-orange:hover {
+  box-shadow:
+    0 0 0 4px rgba(254, 104, 7, 0.24),
+    0 12px 28px rgba(254, 104, 7, 0.2);
+}
+
 .wallet-adapter-button {
-  background: var(--od-ink) !important;
-  border-radius: 0.5rem !important;
+  background: #ffffff !important;
+  color: #09080d !important;
+  border: 1px solid #191bdf !important;
+  border-radius: 9999px !important;
+  box-shadow:
+    0 0 0 3px rgba(25, 27, 223, 0.16),
+    0 8px 24px rgba(25, 27, 223, 0.14) !important;
   font-family: var(--font-sans) !important;
   height: 2.5rem !important;
   line-height: 1 !important;
 }
 
 .wallet-adapter-button:hover {
-  background: var(--od-slate) !important;
+  background: #ffffff !important;
+  box-shadow:
+    0 0 0 4px rgba(25, 27, 223, 0.24),
+    0 12px 28px rgba(25, 27, 223, 0.22) !important;
 }
 
 .wallet-adapter-modal-wrapper {
+  background: rgba(9, 8, 13, 0.28) !important;
   font-family: var(--font-sans) !important;
+}
+
+.wallet-adapter-modal {
+  background: var(--od-surface) !important;
+  color: var(--od-ink) !important;
+  border-radius: 1rem !important;
+}
+
+.wallet-adapter-modal-title {
+  color: var(--od-ink) !important;
+}
+
+.wallet-adapter-modal-button-close {
+  background: var(--od-paper) !important;
 }

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 
 const HomePage = () => {
-  redirect("/protect")
+  redirect("/dashboard")
 }
 
 export default HomePage

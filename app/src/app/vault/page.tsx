@@ -11,7 +11,7 @@ const VaultPage = () => {
   return (
     <div data-testid="vault-page">
       <div className="mb-6">
-        <h1 className="font-display text-3xl text-ink">Vault</h1>
+        <h1 className="text-3xl font-medium tracking-tight text-ink">Vault</h1>
         <p className="mt-1 text-slate">Solvency, LP capital, netting, and the trade tape.</p>
       </div>
       {pricer.error ? <p className="mb-4 text-sm text-danger">{pricer.error}</p> : null}

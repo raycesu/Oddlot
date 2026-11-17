@@ -30,7 +30,7 @@ export const WalletGate = ({ usdcBalance, isLoading, onFunded, children }: Walle
   if (!connected) {
     return (
       <div
-        className="rounded-lg border border-dashed border-line bg-surface px-4 py-8 text-center"
+        className="panel panel-dashed px-4 py-8 text-center"
         data-testid="wallet-disconnected"
       >
         <p className="text-slate">Connect a wallet to buy</p>
@@ -41,7 +41,7 @@ export const WalletGate = ({ usdcBalance, isLoading, onFunded, children }: Walle
   if (usdcBalance < USD) {
     return (
       <div
-        className="rounded-lg border border-line bg-surface px-4 py-8 text-center"
+        className="panel px-4 py-8 text-center"
         data-testid="no-usdc"
       >
         <p className="mb-1 text-ink">You need test USDC</p>

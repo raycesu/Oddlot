@@ -22,8 +22,8 @@ const WalletMultiButton = dynamic(
 )
 
 const NAV = [
-  { href: "/protect", label: "Puts" },
-  { href: "/buy", label: "Calls" },
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/trade", label: "Trade" },
   { href: "/vault", label: "Vault" },
 ]
 
@@ -35,7 +35,7 @@ export const Header = () => {
     <header className="border-b border-line/80 bg-surface/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-3 sm:px-6">
         <Link
-          href="/protect"
+          href="/dashboard"
           className="font-display text-2xl tracking-tight text-ink"
           aria-label="Oddlot home"
         >
@@ -55,8 +55,8 @@ export const Header = () => {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-                  isActive ? "bg-teal-soft text-teal" : "text-slate hover:bg-paper",
+                  "rounded-full px-3 py-1.5 text-sm font-medium transition-shadow",
+                  isActive ? "halo-blue" : "rounded-full text-slate hover:bg-paper",
                 )}
                 aria-current={isActive ? "page" : undefined}
               >
@@ -68,8 +68,8 @@ export const Header = () => {
         <div className="ml-auto flex flex-wrap items-center gap-3">
           <span
             className={cn(
-              "rounded-md px-2.5 py-1 text-xs font-medium",
-              market.open ? "bg-teal-soft text-teal" : "bg-paper text-warn",
+              "rounded-full px-2.5 py-1 text-xs font-medium",
+              market.open ? "halo-blue" : "halo-orange",
             )}
             data-testid="market-chip"
           >

@@ -141,8 +141,8 @@ export const ProtectForm = ({
             role="tab"
             aria-selected={seriesMode === item}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm font-medium capitalize",
-              seriesMode === item ? "bg-ink text-white" : "border border-line bg-surface text-slate",
+              "rounded-full px-3 py-1.5 text-sm font-medium capitalize",
+              seriesMode === item ? "halo-blue" : "rounded-full border border-line bg-surface text-slate",
             )}
             onClick={() => {
               setSeriesMode(item)
@@ -157,14 +157,14 @@ export const ProtectForm = ({
       <WalletGate usdcBalance={usdcBalance} isLoading={isLoading} onFunded={() => void onRefresh()}>
         {marketBlocks ? (
           <div
-            className="rounded-lg border border-line bg-surface px-4 py-6 text-center text-warn"
+            className="panel px-4 py-6 text-center text-warn"
             data-testid="market-closed"
           >
             Market closed. Sales resume at 9:30 AM ET.
           </div>
         ) : puts.length === 0 ? (
           <div
-            className="rounded-lg border border-line bg-surface px-4 py-6 text-center text-warn"
+            className="panel px-4 py-6 text-center text-warn"
             data-testid="no-live-puts"
           >
             No live demo puts with a fresh quote. Keep the keeper running (`cd keeper && npm run
@@ -182,8 +182,8 @@ export const ProtectForm = ({
                     key={mode}
                     type="button"
                     className={cn(
-                      "rounded-md px-3 py-1.5 text-sm capitalize",
-                      holdMode === mode ? "bg-ink text-white" : "border border-line bg-surface text-slate",
+                      "rounded-full px-3 py-1.5 text-sm capitalize",
+                      holdMode === mode ? "halo-blue" : "rounded-full border border-line bg-surface text-slate",
                     )}
                     onClick={() => setHoldMode(mode)}
                     aria-pressed={holdMode === mode}
@@ -234,9 +234,9 @@ export const ProtectForm = ({
                       key={widthOption}
                       type="button"
                       className={cn(
-                        "rounded-md px-3 py-2 font-mono text-sm",
+                        "rounded-full px-3 py-2 font-mono text-sm",
                         widthDollars === widthOption
-                          ? "bg-teal-soft text-teal"
+                          ? "halo-blue"
                           : "border border-line bg-surface",
                       )}
                       onClick={() => {
@@ -253,7 +253,7 @@ export const ProtectForm = ({
             </div>
 
             {selected && shares > 0 ? (
-              <div className="rounded-lg border border-line bg-surface p-4" data-testid="protect-summary">
+              <div className="panel p-4" data-testid="protect-summary">
                 <p className="text-lg text-ink">
                   Protects {formatShares(shares)} shares from ${Math.round(strike)} down to $
                   {Math.round(floor)} until {formatEtDate(selected.expiry)}.
@@ -289,7 +289,7 @@ export const ProtectForm = ({
       </WalletGate>
 
       <section>
-        <h2 className="mb-2 font-display text-xl text-ink">Your tokens</h2>
+        <h2 className="mb-2 text-xl font-medium tracking-tight text-ink">Your tokens</h2>
         <TokenList holdings={holdings} />
       </section>
     </div>

@@ -55,3 +55,6 @@ Record agent decisions here when the PRD leaves something unspecified.
 | 2026-11-15 | `READ_RPC` falls back to `RPC_URL` (not public); batch `getMultipleAccountsInfo` for USDC+holdings; keep last USDC on 429; pricer poll 10s | Public `api.devnet.solana.com` 429’d under poll; failed `getAccount` was treated as $0 and forced the faucet gate | WS4 |
 | 2026-11-15 | Protect screen shows “Your tokens” (same holdings as Calls) | Users buy puts on Puts and had no portfolio list there | WS4 |
 | 2026-11-15 | Public app URL https://oddlot-vault.vercel.app; README demo path = Vercel app+pricer, on-demand keeper | Judges open hosted app; operator starts keeper only for live quotes/faucet | Docs |
+| 2026-11-16 | P1 Gemini residual hedge is paper at live asks, trading the diff | Spec allows sandbox orders or paper fills. Sandbox keys are still an open human step. Buys fill at the ask; sales fill at the bid | WS2 |
+| 2026-11-16 | `GET /simulation` is a new schema; existing quote/book/distribution/trade schemas stay frozen | P1 LP P&L needs a response shape the M0 list did not include | WS2 |
+| 2026-11-16 | Postgres trade tape is the pricer `DATABASE_URL`, not a second QuickNode destination | The account has one stream slot, already aimed at the webhook. SQLite remains the default so local runs and tests need no database | WS2 |

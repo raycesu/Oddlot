@@ -6,10 +6,12 @@ import {
   fetchBook,
   fetchDistribution,
   fetchQuotes,
+  fetchSimulation,
   fetchTrades,
   type BookResponse,
   type DistributionResponse,
   type QuotesResponse,
+  type SimulationResponse,
   type TradesResponse,
 } from "@/lib/api"
 
@@ -21,6 +23,7 @@ export type PricerBundle = {
   book: BookResponse | null
   distribution: DistributionResponse | null
   trades: TradesResponse | null
+  simulation: SimulationResponse | null
   isLoading: boolean
   error: string | null
 }
@@ -30,6 +33,7 @@ export const usePricer = (): PricerBundle => {
   const [book, setBook] = useState<BookResponse | null>(null)
   const [distribution, setDistribution] = useState<DistributionResponse | null>(null)
   const [trades, setTrades] = useState<TradesResponse | null>(null)
+  const [simulation, setSimulation] = useState<SimulationResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -37,12 +41,14 @@ export const usePricer = (): PricerBundle => {
     let cancelled = false
     const load = async () => {
       try {
-        const [nextQuotes, nextBook, nextDistribution, nextTrades] = await Promise.all([
-          fetchQuotes(),
-          fetchBook(),
-          fetchDistribution(),
-          fetchTrades(),
-        ])
+        const [nextQuotes, nextBook, nextDistribution, nextTrades, nextSimulation] =
+          await Promise.all([
+            fetchQuotes(),
+            fetchBook(),
+            fetchDistribution(),
+            fetchTrades(),
+            fetchSimulation(),
+          ])
         if (cancelled) {
           return
         }
@@ -50,6 +56,7 @@ export const usePricer = (): PricerBundle => {
         setBook(nextBook)
         setDistribution(nextDistribution)
         setTrades(nextTrades)
+        setSimulation(nextSimulation)
         setError(null)
       } catch (err) {
         if (!cancelled) {
@@ -71,5 +78,5 @@ export const usePricer = (): PricerBundle => {
     }
   }, [])
 
-  return { quotes, book, distribution, trades, isLoading, error }
+  return { quotes, book, distribution, trades, simulation, isLoading, error }
 }

@@ -44,7 +44,38 @@ const mockPricer = async (page: Page) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({ event: "SPXEND26", r: "0", coverage: "0.9", buckets: [] }),
+      body: JSON.stringify({
+        event: "SPXEND26",
+        r: "0.1",
+        coverage: "0.9",
+        buckets: [
+          {
+            label: "7,800 to 7,999.99",
+            spy_mid: "790.00",
+            crowd_prob: "0.24",
+            bs_prob: "0.18",
+            bid: "0.20",
+            ask: "0.24",
+          },
+        ],
+      }),
+    })
+  })
+  await page.route("**/simulation", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        asof: new Date().toISOString(),
+        spot: "780.00",
+        paths: 1000,
+        strategies: [
+          { id: "unhedged", mean_pnl: "-12.00", p05: "-40.00", p50: "-10.00", p95: "8.00" },
+          { id: "delta", mean_pnl: "-4.00", p05: "-12.00", p50: "-3.00", p95: "2.00" },
+          { id: "lots_delta", mean_pnl: "-2.00", p05: "-6.00", p50: "-1.00", p95: "1.00" },
+          { id: "lots_gemini", mean_pnl: "-1.50", p05: "-5.00", p50: "-1.00", p95: "0.80" },
+        ],
+      }),
     })
   })
   await page.route("**/trades", async (route) => {
@@ -102,6 +133,8 @@ test.describe("M4 smoke — disconnected", () => {
     await expect(page.getByTestId("vault-page")).toBeVisible()
     await expect(page.getByTestId("solvency-panel")).toBeVisible()
     await expect(page.getByTestId("wallet-disconnected")).toContainText("Connect a wallet to deposit")
+    await expect(page.getByTestId("crowd-chart")).toBeVisible()
+    await expect(page.getByTestId("pnl-sim")).toBeVisible()
     await expect(page.getByTestId("trade-tape")).toBeVisible()
   })
 })

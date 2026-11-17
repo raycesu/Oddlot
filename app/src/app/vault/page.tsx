@@ -20,6 +20,8 @@ const VaultPage = () => {
         usdcHeld={vaultState.usdcHeld}
         book={pricer.book}
         trades={pricer.trades}
+        distribution={pricer.distribution}
+        simulation={pricer.simulation}
         isLoading={vaultState.isLoading && pricer.isLoading}
         onRefresh={vaultState.refresh}
       />

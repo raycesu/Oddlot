@@ -16,7 +16,7 @@
     "accept": "vitest run && playwright test"
   },
   "engines": {
-    "node": "20.x"
+    "node": "26.x"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",

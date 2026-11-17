@@ -1,7 +1,7 @@
 {
   "cluster": "devnet",
-  "underlying": "SPY",
-  "pyth_feed_id": "19e09bb805456ada3979a7d1cbb4b6d63babc3a0f8e8a9509f68afa5c4c11cd5",
+  "underlying": "VOO",
+  "pyth_feed_id": "236b30dd09a9c00dfeec156c7b1efd646c0f01825a1758e3e4a0679e3bdff179",
   "usdc_mint": "3GQqfzNtHu9EXrn8fwXkeU6FkgC3n9eRJv1VdWK6xAq9",
   "program_id": "AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n",
   "vault": {

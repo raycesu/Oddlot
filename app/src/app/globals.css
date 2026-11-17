@@ -30,7 +30,7 @@
   --color-warn: var(--od-warn);
   --color-danger: var(--od-danger);
   --color-ok: var(--od-ok);
-  --font-sans: var(--font-geist), "Segoe UI", sans-serif;
+  --font-sans: var(--font-geist-sans), "Segoe UI", sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-display: var(--font-fraunces), "Times New Roman", serif;
 }
@@ -57,7 +57,7 @@ body {
     radial-gradient(800px 380px at 100% 0%, rgba(254, 104, 7, 0.1), transparent 50%),
     var(--od-paper);
   color: var(--od-ink);
-  font-family: var(--font-geist), "Segoe UI", sans-serif;
+  font-family: var(--font-geist-sans), "Segoe UI", sans-serif;
 }
 
 body {

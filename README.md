@@ -1,6 +1,6 @@
 # Oddlot
 
-**SPY options in one-share lots**, fully backed by USDC on Solana, priced against Wall Street and Gemini’s prediction market.
+**VOO (S&P 500 ETF) options in one-share lots**, fully backed by USDC on Solana, priced against Wall Street and Gemini’s prediction market.
 
 Built for **UBC 2026** — DeFi & Onchain Applications · Best use of Solana · Gemini Prediction Markets · QuickNode Streams.
 
@@ -35,7 +35,7 @@ Without the keeper running, users can still open the site and browse Vault/serie
 
 ## Problem and solution
 
-A client with ~$34k in an S&P fund holds ~**44** SPY-equivalent shares. Listed puts protect **0 or 100**. Oddlot mints **exact-share** capped call/put spreads so an advisor can cover 44 shares in one transaction.
+A client with ~$34k in an S&P fund holds ~**44** VOO-equivalent shares. Listed puts protect **0 or 100**. Oddlot mints **exact-share** capped call/put spreads so an advisor can cover 44 shares in one transaction.
 
 | User | Screen | Job |
 |------|--------|-----|
@@ -61,8 +61,8 @@ Browser (Next.js) ──RPC──► Solana program (vault, series, buy, settle)
 1. **Quote** — Pricer computes `max(Black–Scholes, Gemini crowd)` + 3% spread; keeper posts on-chain every ~15s  
 2. **Buy** — Program checks market hours, fresh quote, utilization; takes premium; **locks max payout**; mints Token-2022 option tokens  
 3. **Stream** — QuickNode delivers `Bought` to the pricer hedger  
-4. **Hedge** — Every 100 tokens → one listed SPY spread (paper); leftovers via Gemini (year-end) or SPYx delta  
-5. **Settle** — Keeper settles with Pyth (or demo oracle); permanent delegate auto-pays holders
+4. **Hedge** — Every 100 tokens → one listed VOO/S&P ETF spread (paper); leftovers via Gemini (year-end) or delta  
+5. **Settle** — Keeper settles with Pyth VOO (or demo oracle); permanent delegate auto-pays holders
 
 ---
 
@@ -72,7 +72,7 @@ Browser (Next.js) ──RPC──► Solana program (vault, series, buy, settle)
 - **Holders:** No counterparty risk from the hedger — payout is collateralized on-chain. Unsafe buys that would break coverage are rejected.  
 - **LPs:** Deposit USDC, earn premiums, bear residual market risk after hedging. Withdrawals limited to free (unlocked) liquidity.  
 - **Coverage:** `vault USDC / total_locked` must stay ≥ 100% while open interest is backed.  
-- **Quote:** Higher of BS (listed SPY IV) and Gemini crowd, plus 3% spread. Crowd unavailable → BS only.  
+- **Quote:** Higher of BS (listed VOO IV) and Gemini crowd, plus 3% spread. Crowd unavailable → BS only.  
 - **Devnet / test USDC only.** No mainnet, no real funds, no KYC.
 
 ---
@@ -81,7 +81,7 @@ Browser (Next.js) ──RPC──► Solana program (vault, series, buy, settle)
 
 - **Anchor program** on Solana **devnet** owns vault USDC, series state, quotes, buy, settle, and exercise.  
 - **Token-2022** option mints: 0 decimals (1 token = 1 share), metadata, **permanent delegate** for auto-exercise.  
-- **Pyth** SPY pull oracle with market-hours / confidence guards for year-end series; **DemoOracle** + replay feed for live settlement demos.  
+- **Pyth** VOO pull oracle with market-hours / confidence guards for year-end series; **DemoOracle** + replay feed for live settlement demos.  
 - **PDAs** for vault, USDC vault, demo oracle, and each series — no trusted off-chain custody of payouts.  
 - Wallet UX: Phantom via Wallet Standard on the Next.js app.
 
@@ -96,7 +96,7 @@ Browser (Next.js) ──RPC──► Solana program (vault, series, buy, settle)
 | USDC vault PDA | `6MkcaXxGzHfiV9aFaFxpB2p1HpD4udjby7oyz1DnnSh1` |
 | Demo oracle PDA | `9oYCZp2LtqnAAQ3cBBtSFidDhmn5rBcDjy9RRjcACpxs` |
 | Test USDC mint | `3GQqfzNtHu9EXrn8fwXkeU6FkgC3n9eRJv1VdWK6xAq9` |
-| Pyth SPY feed | `19e09bb805456ada3979a7d1cbb4b6d63babc3a0f8e8a9509f68afa5c4c11cd5` |
+| Pyth VOO feed | `236b30dd09a9c00dfeec156c7b1efd646c0f01825a1758e3e4a0679e3bdff179` |
 | Deploy tx | [`oiav8FAJ…AhQpN`](https://explorer.solana.com/tx/oiav8FAJbeNN9qDBqk4H3eUmkqYUNPZqYaYLBvnBeWixbqtxKA9quC6WBxyxVx5VPBCS2PKwZ4CzsZ2Yw3AhQpN?cluster=devnet) |
 
 LP mint is created at `init_vault` (stored on the Vault account). Series PDAs / option mints are created by `create-series` / `seed-demo`.
@@ -106,7 +106,7 @@ LP mint is created at `init_vault` (stored on the Vault account). Series PDAs / 
 ## How we use Gemini
 
 - Public Prediction Markets API: event **`SPXEND26`** (S&P year-end), base `https://api.gemini.com`.  
-- Crowd price = strip of bucket **asks** mapped to the capped spread payoff (SPY↔SPX ratio).  
+- Crowd price = strip of bucket **asks** mapped to the capped spread payoff (VOO↔SPX ratio).  
 - Year-end series quote = `max(BS, crowd)`; residuals after round-lot netting are paper-hedged with Gemini buckets (P1 live orders optional).  
 - No API key required for market data. Sandbox keys only if placing orders.
 
@@ -163,7 +163,7 @@ cp .env.example .env
 #   PRICER_URL=https://oddlot-pricer.vercel.app
 #   ADMIN_KEYPAIR=...  KEEPER_KEYPAIR=...  FAUCET_KEYPAIR=...
 #   QUICKNODE_API_KEY=...  QUICKNODE_STREAM_TOKEN=...   # only for stream-setup
-#   PYTH_API_KEY=...   # year-end settle / Hermes
+#   PYTH_API_KEY=...   # year-end VOO Hermes (keeper settle + pricer spot)
 
 # 1) Keeper — quotes, settle/replay, faucet on :8787
 cd keeper && npm install && npm run dev
@@ -176,17 +176,24 @@ cp .env.example .env.local
 # NEXT_PUBLIC_PROGRAM_ID=AMUpbS3C4pWo1osN91uVzs1rMLxZvUUrJpQVpkPjZd1n
 # NEXT_PUBLIC_PRICER_URL=https://oddlot-pricer.vercel.app
 # NEXT_PUBLIC_KEEPER_URL=http://127.0.0.1:8787
+# PYTH_API_KEY=...   # same Hermes key; required for year-end buys via /api/pyth-latest
 npm install && npm run dev
 ```
 
 Open **http://127.0.0.1:3000** → **Puts** / **Calls** / **Vault**. Connect Phantom (devnet). Use the in-app faucet if you need test USDC.
 
-Seed a live demo book (with keeper env loaded):
+Seed year-end (VOO Pyth) + demo book (with keeper env loaded):
 
 ```bash
 cd keeper
-npm run create-series          # year-end grid if missing
+npm run create-series          # new VOO year-end grid (old SPY PDAs are unused)
 npm run seed-demo -- --target demo
+
+# Smoke (US equity hours for year-end):
+#   curl -H "Authorization: Bearer $PYTH_API_KEY" \
+#     "https://hermes.pyth.network/v2/updates/price/latest?ids[]=236b30dd09a9c00dfeec156c7b1efd646c0f01825a1758e3e4a0679e3bdff179"
+#   curl -s http://127.0.0.1:3000/api/pyth-latest
+# Demo buys/settles do not need Pyth.
 ```
 
 ### Full local stack (offline pricer)

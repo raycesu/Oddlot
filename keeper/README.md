@@ -16,7 +16,7 @@ npm run dev
 | Loop | Interval | What it does |
 |------|----------|----------------|
 | Quotes | 15s | `GET /quotes`, then `post_quote` when the premium changed or the on-chain quote is older than 30s. A failed fetch posts nothing |
-| Settle | 60s | Expired series. Demo uses the demo oracle. Pyth uses Hermes when `PYTH_API_KEY` is set |
+| Settle | 60s | Expired series. Demo uses the demo oracle. Year-end uses Hermes Equity.US.VOO/USD when `PYTH_API_KEY` is set |
 | Replay | 5s | `set_demo_price` from `config/replay-shock.json`, then settle once the oracle time is inside the settle window |
 
 The same process serves the faucet on port 8787 (`KEEPER_PORT` overrides it).
@@ -38,7 +38,9 @@ npm run seed-demo -- --target year-end
 npm run stream-setup
 ```
 
-`seed-demo` creates the vault if needed, deposits 50,000 test USDC, builds the year-end grid, and with `--target demo` (the default) creates a call (width $20) and a put (width $40) on the replay oracle. Five buyer wallets then buy until open interest is about 56 puts and 30 calls.
+`create-series` builds the **VOO** year-end Pyth grid from pricer spot (`config.underlying` + `pyth_feed_id`). After switching from SPY, re-run it so new PDAs exist; old SPY year-end accounts are left on-chain but unused.
+
+`seed-demo` creates the vault if needed, deposits 50,000 test USDC, builds the year-end grid, and with `--target demo` (the default) creates a call (width $20) and a put (width $40) on the replay oracle. Five buyer wallets then buy until open interest is about 56 puts and 30 calls. Demo settle does not need `PYTH_API_KEY`.
 
 ## Stream
 

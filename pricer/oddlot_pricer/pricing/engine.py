@@ -156,7 +156,7 @@ def build_distribution_payload(
         (b.estimate or Decimal("0")) for b in snapshot.gemini_buckets
     ) or Decimal("1")
     spot = float(spot_for_bs or snapshot.spot)
-    # Simple BS bucket prob proxy: normal density around spot via SPY mids
+    # Simple BS bucket prob proxy: normal density around spot via ETF mids
     for bucket in snapshot.gemini_buckets:
         spy_mid = snapshot.r * bucket.midpoint
         estimate = bucket.estimate or Decimal("0")

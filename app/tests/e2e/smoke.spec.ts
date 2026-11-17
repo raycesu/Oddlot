@@ -10,8 +10,8 @@ const mockPricer = async (page: Page) => {
         spot: "780.00",
         quotes: [
           {
-            series: "SPY Dec 31 $780/$800 call",
-            underlying: "SPY",
+            series: "VOO Dec 31 $780/$800 call",
+            underlying: "VOO",
             kind: "call",
             strike: "780.00",
             width: "20.00",

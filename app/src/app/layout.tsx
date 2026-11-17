@@ -24,7 +24,7 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: "Oddlot",
-  description: "SPY options in one-share lots on Solana",
+  description: "VOO options in one-share lots on Solana",
 }
 
 type RootLayoutProps = {

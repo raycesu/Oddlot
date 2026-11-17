@@ -1,3 +1,4 @@
+import { appConfig } from "./config"
 import { USD, formatUsdRaw } from "./money"
 import type { SeriesView } from "./pdas"
 import { KIND_CALL } from "./pdas"
@@ -71,7 +72,7 @@ export const seriesLabel = (series: SeriesView): string => {
   const long = series.kind === KIND_CALL ? strike : strike
   const short = series.kind === KIND_CALL ? strike + width : strike - width
   const expiry = formatEtDate(series.expiry)
-  return `SPY ${expiry} $${Math.round(long)}/$${Math.round(short)} ${kind}`
+  return `${appConfig.underlying} ${expiry} $${Math.round(long)}/$${Math.round(short)} ${kind}`
 }
 
 export const strikeChipLabel = (strike1e6: bigint): string =>

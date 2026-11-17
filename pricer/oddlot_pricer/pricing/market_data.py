@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -103,8 +104,12 @@ class LiveMarketData:
     def fetch_spot(self) -> Decimal | None:
         feed = self.config.pyth_feed_id
         url = f"https://hermes.pyth.network/v2/updates/price/latest?ids[]={feed}"
+        headers: dict[str, str] = {}
+        api_key = os.environ.get("PYTH_API_KEY", "").strip()
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
         try:
-            response = httpx.get(url, timeout=self.http_timeout_s)
+            response = httpx.get(url, headers=headers, timeout=self.http_timeout_s)
             response.raise_for_status()
             payload = response.json()
             parsed = payload.get("parsed") or []
@@ -123,19 +128,19 @@ class LiveMarketData:
         try:
             import yfinance as yf
 
-            spy = yf.Ticker("SPY")
+            etf = yf.Ticker(self.config.underlying)
             gspc = yf.Ticker("^GSPC")
-            spy_hist = spy.history(period="5d")
+            etf_hist = etf.history(period="5d")
             spx_hist = gspc.history(period="5d")
-            if not spy_hist.empty and not spx_hist.empty:
-                spy_close = Decimal(str(spy_hist["Close"].iloc[-1]))
+            if not etf_hist.empty and not spx_hist.empty:
+                etf_close = Decimal(str(etf_hist["Close"].iloc[-1]))
                 spx_close = Decimal(str(spx_hist["Close"].iloc[-1]))
                 if spx_close > 0:
-                    ratio = spy_close / spx_close
+                    ratio = etf_close / spx_close
 
-            expiries = list(getattr(spy, "options", []) or [])
+            expiries = list(getattr(etf, "options", []) or [])
             if expiries:
-                chain = spy.option_chain(expiries[0])
+                chain = etf.option_chain(expiries[0])
                 for _, row in chain.calls.iterrows():
                     strike = Decimal(str(row["strike"]))
                     iv = row.get("impliedVolatility")

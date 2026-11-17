@@ -19,7 +19,7 @@ npm install
 npm run dev                  # http://127.0.0.1:3000
 ```
 
-Needs a live pricer (`NEXT_PUBLIC_PRICER_URL`) and keeper faucet (`NEXT_PUBLIC_KEEPER_URL`). Year-end buys also need `PYTH_API_KEY` for `/api/pyth-latest`. Demo series buys use the on-chain DemoOracle and do not need Pyth.
+Needs a live pricer (`NEXT_PUBLIC_PRICER_URL`) and keeper faucet (`NEXT_PUBLIC_KEEPER_URL`). Year-end buys also need `PYTH_API_KEY` for `/api/pyth-latest` (Hermes Equity.US.VOO/USD). Demo series buys use the on-chain DemoOracle and do not need Pyth.
 
 Series/vault polls use `NEXT_PUBLIC_READ_RPC_URL` (default public, ~30s, paused when the tab is hidden). Wallet sends use `NEXT_PUBLIC_RPC_URL` (optional QuickNode).
 

@@ -20,6 +20,8 @@ All M2 acceptance tests must pass (BS + crowd reference numbers, label parse, Bo
 uvicorn oddlot_pricer.api.main:app --reload --port 8000
 ```
 
+For live year-end spot, set `PYTH_API_KEY` (Hermes Bearer) so `fetch_spot` can read Equity.US.VOO/USD. Without it, spot falls back to `$780`.
+
 Set `OFFLINE_PRICER=1` to use the PRD toy Gemini book and spot `$780` without live Hermes/yfinance/Gemini calls.
 
 Frozen response shapes: `../schemas/api/`. Pydantic models: `oddlot_pricer/api/schemas.py`.

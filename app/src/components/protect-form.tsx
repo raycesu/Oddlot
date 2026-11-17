@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { TokenList } from "@/components/token-list"
 import { WalletGate } from "@/components/wallet-gate"
 import { buyOption } from "@/lib/buy"
-import { explorerTxUrl } from "@/lib/config"
+import { appConfig, explorerTxUrl } from "@/lib/config"
 import { mapProgramError } from "@/lib/errors"
 import { dollarsFrom1e6, formatDollars, formatEtDate, formatShares, seriesLabel, shortPremium } from "@/lib/format"
 import { KIND_PUT, type SeriesView, type VaultView } from "@/lib/pdas"
@@ -174,7 +174,7 @@ export const ProtectForm = ({
           <div className="space-y-5">
             <div>
               <p className="mb-2 text-sm font-medium text-slate">
-                I hold of SPY or an S&amp;P 500 fund
+                I hold of {appConfig.underlying} or an S&amp;P 500 fund
               </p>
               <div className="flex flex-wrap gap-2">
                 {(["shares", "dollars"] as HoldMode[]).map((mode) => (

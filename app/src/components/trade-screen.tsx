@@ -8,6 +8,7 @@ import { ProtectForm } from "@/components/protect-form"
 import { usePricer } from "@/hooks/use-pricer"
 import { useSeries } from "@/hooks/use-series"
 import { useVault } from "@/hooks/use-vault"
+import { appConfig } from "@/lib/config"
 import { cn } from "@/lib/utils"
 
 export type TradeSide = "call" | "put"
@@ -44,7 +45,7 @@ export const TradeScreen = ({ initialSide }: TradeScreenProps) => {
           <h1 className="text-3xl font-medium tracking-tight text-ink">Trade</h1>
           <p className="mt-1 text-slate">
             {side === "call"
-              ? "One-share SPY calls. On-chain premium is what you pay."
+              ? `One-share ${appConfig.underlying} calls. On-chain premium is what you pay.`
               : "Exact-share puts for advisors — cover 44 shares in one transaction."}
           </p>
         </div>

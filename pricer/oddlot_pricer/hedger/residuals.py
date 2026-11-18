@@ -17,6 +17,7 @@ class GeminiPaperTarget:
     label: str
     contracts: int
     ask: Decimal | None
+    bid: Decimal | None = None
 
 
 @dataclass(frozen=True)
@@ -39,7 +40,12 @@ def gemini_residual_targets(
         raw = Decimal(residual) * payoff
         contracts = int(math.ceil(float(raw))) if raw > 0 else 0
         targets.append(
-            GeminiPaperTarget(label=bucket.label, contracts=contracts, ask=bucket.ask)
+            GeminiPaperTarget(
+                label=bucket.label,
+                contracts=contracts,
+                ask=bucket.ask,
+                bid=bucket.bid,
+            )
         )
     return targets
 

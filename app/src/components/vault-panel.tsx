@@ -9,10 +9,12 @@ import {
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
+import { CrowdChart } from "@/components/crowd-chart"
 import { NettingMeter } from "@/components/netting-meter"
+import { PnlSim } from "@/components/pnl-sim"
 import { TradeTape } from "@/components/trade-tape"
 import { Button } from "@/components/ui/button"
-import type { BookResponse, TradesResponse } from "@/lib/api"
+import type { BookResponse, DistributionResponse, SimulationResponse, TradesResponse } from "@/lib/api"
 import { explorerTxUrl } from "@/lib/config"
 import { mapProgramError } from "@/lib/errors"
 import { formatDollars, formatShares } from "@/lib/format"
@@ -25,6 +27,8 @@ type VaultPanelProps = {
   usdcHeld: bigint
   book: BookResponse | null
   trades: TradesResponse | null
+  distribution: DistributionResponse | null
+  simulation: SimulationResponse | null
   isLoading: boolean
   onRefresh: () => Promise<void>
 }
@@ -34,6 +38,8 @@ export const VaultPanel = ({
   usdcHeld,
   book,
   trades,
+  distribution,
+  simulation,
   isLoading,
   onRefresh,
 }: VaultPanelProps) => {
@@ -212,6 +218,16 @@ export const VaultPanel = ({
       <section>
         <h2 className="mb-3 text-xl font-medium tracking-tight text-ink">Netting meter</h2>
         <NettingMeter rows={book?.series ?? []} />
+      </section>
+
+      <section>
+        <h2 className="mb-3 text-xl font-medium tracking-tight text-ink">Crowd vs Wall Street</h2>
+        <CrowdChart buckets={distribution?.buckets ?? []} />
+      </section>
+
+      <section>
+        <h2 className="mb-3 text-xl font-medium tracking-tight text-ink">LP P&amp;L simulation</h2>
+        <PnlSim simulation={simulation} />
       </section>
 
       <section>

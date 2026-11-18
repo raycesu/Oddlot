@@ -207,6 +207,8 @@ OFFLINE_PRICER=1 uvicorn oddlot_pricer.api.main:app --reload --port 8000
 
 Point `PRICER_URL` / `NEXT_PUBLIC_PRICER_URL` at `http://127.0.0.1:8000`. Offline mode uses the PRD toy Gemini book and spot $780 (no live Hermes/yfinance/Gemini).
 
+The hedge book and trade tape stay in SQLite unless `DATABASE_URL` is a `postgres://` or `postgresql://` URL. Set that on the hosted pricer when the tape should survive a restart. The QuickNode stream stays a single webhook to `/webhook/quicknode`.
+
 ### Program build & tests
 
 ```bash

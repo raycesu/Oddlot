@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 
 import { appConfig } from "@/lib/config"
 import { pythToUsd1e6 } from "@/lib/money"
@@ -12,7 +12,18 @@ type HermesBody = {
   }[]
 }
 
-export const GET = async () => {
+const normalizeFeedId = (raw: string | null): string | null => {
+  if (!raw) {
+    return appConfig.pythFeedId.replace(/^0x/i, "").toLowerCase()
+  }
+  const clean = raw.replace(/^0x/i, "").toLowerCase()
+  if (!/^[0-9a-f]{64}$/.test(clean)) {
+    return null
+  }
+  return clean
+}
+
+export const GET = async (request: NextRequest) => {
   const apiKey = process.env.PYTH_API_KEY
   if (!apiKey) {
     return NextResponse.json(
@@ -20,7 +31,11 @@ export const GET = async () => {
       { status: 503 },
     )
   }
-  const url = `${HERMES}/v2/updates/price/latest?ids[]=${appConfig.pythFeedId}&encoding=base64`
+  const feedId = normalizeFeedId(request.nextUrl.searchParams.get("feed"))
+  if (!feedId) {
+    return NextResponse.json({ error: "Invalid Pyth feed id" }, { status: 400 })
+  }
+  const url = `${HERMES}/v2/updates/price/latest?ids[]=${feedId}&encoding=base64`
   const response = await fetch(url, {
     headers: { authorization: `Bearer ${apiKey}` },
     cache: "no-store",
@@ -42,5 +57,6 @@ export const GET = async () => {
     updateData,
     publishTime: price.publish_time,
     usd: (Number(usd1e6) / 1_000_000).toFixed(2),
+    feedId,
   })
 }

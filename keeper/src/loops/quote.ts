@@ -50,9 +50,16 @@ export const postQuotesOnce = async (config: KeeperConfig): Promise<number> => {
   const seriesList = await listSeries(config, keeper)
   const now = nowSeconds()
   const ixs: TransactionInstruction[] = []
+  const feedHex = config.feedId.replace(/^0x/i, "").toLowerCase()
   for (const series of seriesList) {
     if (series.settled || series.expiry <= now) {
       continue
+    }
+    // Skip leftover year-end PDAs from prior underlyings (e.g. SPY after VOO cutover).
+    if (series.oracleKind !== ORACLE_DEMO) {
+      if (series.underlying !== config.file.underlying || series.pythFeedId !== feedHex) {
+        continue
+      }
     }
     const match = quotes.find(
       (quote) =>

@@ -9,6 +9,7 @@ import {
   Connection,
   PublicKey,
   Transaction,
+  type Signer,
   type TransactionInstruction,
   VersionedTransaction,
 } from "@solana/web3.js"
@@ -27,7 +28,10 @@ import { createProgram, getProgramId } from "./program"
 
 const u64 = (value: bigint): BN => new BN(value.toString())
 
-const feedIdHex = (hex: string): string => (hex.startsWith("0x") ? hex : `0x${hex}`)
+const feedIdHex = (hex: string): string => {
+  const clean = hex.replace(/^0x/i, "").toLowerCase()
+  return `0x${clean}`
+}
 
 type MethodsBuy = {
   buy: (
@@ -44,9 +48,12 @@ const methodsOf = (program: Program): MethodsBuy => program.methods as unknown a
 
 const preflightOrThrow = async (
   connection: Connection,
-  tx: Transaction,
+  tx: Transaction | VersionedTransaction,
 ): Promise<void> => {
-  const sim = await connection.simulateTransaction(tx)
+  const sim =
+    tx instanceof VersionedTransaction
+      ? await connection.simulateTransaction(tx, { sigVerify: false, commitment: "confirmed" })
+      : await connection.simulateTransaction(tx)
   if (!sim.value.err) {
     return
   }
@@ -73,10 +80,17 @@ const sendLegacy = async (
   return signature
 }
 
+/**
+ * Year-end buys post a Pyth PriceUpdateV2, then consume it in `buy`.
+ * Ephemeral keypairs own those update accounts — the wallet alone cannot sign them.
+ * Matches `@pythnetwork/solana-utils` `sendTransactions` / keeper `sendPythConsumer`.
+ */
 const sendPythBuy = async (
   connection: Connection,
   wallet: AppWallet,
+  feedId: string,
   updateData: string[],
+  setup: TransactionInstruction[],
   buildBuyIx: (oracle: PublicKey) => Promise<TransactionInstruction>,
 ): Promise<string> => {
   const { PythSolanaReceiver } = await import("@pythnetwork/pyth-solana-receiver")
@@ -86,9 +100,13 @@ const sendPythBuy = async (
   })
   const builder = receiver.newTransactionBuilder({ closeUpdateAccounts: true })
   await builder.addPostPriceUpdates(updateData)
-  await builder.addPriceConsumerInstructions(async (getPriceUpdateAccount: (feedId: string) => PublicKey) => {
-    const oracle = getPriceUpdateAccount(feedIdHex(appConfig.pythFeedId))
-    return [{ instruction: await buildBuyIx(oracle), signers: [], computeUnits: 400_000 }]
+  const feedKey = feedIdHex(feedId)
+  await builder.addPriceConsumerInstructions(async (getPriceUpdateAccount: (id: string) => PublicKey) => {
+    const oracle = getPriceUpdateAccount(feedKey)
+    return [
+      ...setup.map((instruction) => ({ instruction, signers: [] as Signer[] })),
+      { instruction: await buildBuyIx(oracle), signers: [] as Signer[], computeUnits: 400_000 },
+    ]
   })
   const built = await builder.buildVersionedTransactions({
     computeUnitPriceMicroLamports: 50_000,
@@ -96,6 +114,12 @@ const sendPythBuy = async (
   let lastSig = ""
   for (const item of built) {
     const tx = item.tx as VersionedTransaction
+    const ephemeral = (item.signers ?? []) as Signer[]
+    if (ephemeral.length > 0) {
+      tx.sign(ephemeral)
+    }
+    // Surface Anchor errors before Phantom's opaque failed-sim UI.
+    await preflightOrThrow(connection, tx)
     const signed = (await wallet.signTransaction(tx)) as VersionedTransaction
     lastSig = await connection.sendRawTransaction(signed.serialize())
     const blockhash = await connection.getLatestBlockhash()
@@ -173,7 +197,13 @@ export const buyOption = async (args: {
   if (series.oracleKind !== ORACLE_PYTH) {
     throw new Error(`unknown oracle kind ${series.oracleKind}`)
   }
-  await sendLegacy(connection, wallet, setup)
-  const hermes = await fetchPythUpdate()
-  return sendPythBuy(connection, wallet, hermes.updateData, buyIx)
+  const feedId = series.pythFeedId || appConfig.pythFeedId
+  const expected = appConfig.pythFeedId.replace(/^0x/i, "").toLowerCase()
+  if (feedId.toLowerCase() !== expected) {
+    throw new Error(
+      `InvalidOracle: series feed ${feedId.slice(0, 8)}… does not match app feed ${expected.slice(0, 8)}…`,
+    )
+  }
+  const hermes = await fetchPythUpdate(feedId)
+  return sendPythBuy(connection, wallet, feedId, hermes.updateData, setup, buyIx)
 }

@@ -82,12 +82,14 @@ export const findOptionMint = (programId: PublicKey, series: PublicKey): PublicK
 export type SeriesView = {
   address: PublicKey
   vault: PublicKey
+  underlying: string
   kind: number
   strike: bigint
   width: bigint
   expiry: bigint
   buyCutoffS: number
   oracleKind: number
+  pythFeedId: string
   optionMint: PublicKey
   premium: bigint
   bsPremium: bigint
@@ -106,15 +108,35 @@ const field = (account: Record<string, unknown>, camel: string, snake: string): 
 const pubkey = (value: unknown): PublicKey =>
   value instanceof PublicKey ? value : new PublicKey(String(value))
 
+const asBytes = (value: unknown): Uint8Array => {
+  if (value instanceof Uint8Array) {
+    return value
+  }
+  if (Buffer.isBuffer(value)) {
+    return value
+  }
+  if (Array.isArray(value)) {
+    return Uint8Array.from(value as number[])
+  }
+  throw new Error("expected byte array")
+}
+
+export const asAsciiSymbol = (value: unknown): string =>
+  Buffer.from(asBytes(value)).toString("utf8").replace(/\0/g, "")
+
+export const asFeedHex = (value: unknown): string => Buffer.from(asBytes(value)).toString("hex")
+
 export const readSeries = (address: PublicKey, account: Record<string, unknown>): SeriesView => ({
   address,
   vault: pubkey(field(account, "vault", "vault")),
+  underlying: asAsciiSymbol(field(account, "underlying", "underlying")),
   kind: Number(field(account, "kind", "kind")),
   strike: asBigint(field(account, "strike", "strike")),
   width: asBigint(field(account, "width", "width")),
   expiry: asBigint(field(account, "expiry", "expiry")),
   buyCutoffS: Number(field(account, "buyCutoffS", "buy_cutoff_s")),
   oracleKind: Number(field(account, "oracleKind", "oracle_kind")),
+  pythFeedId: asFeedHex(field(account, "pythFeedId", "pyth_feed_id")),
   optionMint: pubkey(field(account, "optionMint", "option_mint")),
   premium: asBigint(field(account, "premium", "premium")),
   bsPremium: asBigint(field(account, "bsPremium", "bs_premium")),

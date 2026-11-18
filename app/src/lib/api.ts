@@ -109,8 +109,11 @@ export type HermesLatest = {
   usd: string
 }
 
-export const fetchPythUpdate = async (): Promise<HermesLatest> => {
-  const response = await fetch("/api/pyth-latest", { cache: "no-store" })
+export const fetchPythUpdate = async (feedId = appConfig.pythFeedId): Promise<HermesLatest> => {
+  const clean = feedId.replace(/^0x/i, "").toLowerCase()
+  const response = await fetch(`/api/pyth-latest?feed=${encodeURIComponent(clean)}`, {
+    cache: "no-store",
+  })
   if (!response.ok) {
     const body = (await response.json().catch(() => ({}))) as { error?: string }
     throw new Error(body.error || `Pyth update failed (${response.status})`)

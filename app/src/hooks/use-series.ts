@@ -113,7 +113,11 @@ export const useSeries = (): SeriesState => {
 }
 
 export const isDemoSeries = (row: SeriesView): boolean => row.oracleKind === ORACLE_DEMO
-export const isYearEndSeries = (row: SeriesView): boolean => row.oracleKind === ORACLE_PYTH
+/** Year-end = Pyth series for the configured vehicle (ignores leftover SPY PDAs after VOO cutover). */
+export const isYearEndSeries = (row: SeriesView): boolean =>
+  row.oracleKind === ORACLE_PYTH &&
+  row.underlying === appConfig.underlying &&
+  row.pythFeedId === appConfig.pythFeedId.replace(/^0x/i, "").toLowerCase()
 export const isCall = (row: SeriesView): boolean => row.kind === KIND_CALL
 
 /** Sales stop `buyCutoffS` seconds before expiry (matches on-chain buy). */

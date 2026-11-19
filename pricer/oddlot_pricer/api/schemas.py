@@ -92,18 +92,3 @@ class TradeItem(BaseModel):
 
 class TradesResponse(BaseModel):
     trades: list[TradeItem] = Field(default_factory=list)
-
-
-class SimulationStrategy(BaseModel):
-    id: Literal["unhedged", "delta", "lots_delta", "lots_gemini"]
-    mean_pnl: str
-    p05: str
-    p50: str
-    p95: str
-
-
-class SimulationResponse(BaseModel):
-    asof: str
-    spot: str
-    paths: int
-    strategies: list[SimulationStrategy]

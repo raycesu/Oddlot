@@ -61,23 +61,6 @@ const mockPricer = async (page: Page) => {
       }),
     })
   })
-  await page.route("**/simulation", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        asof: new Date().toISOString(),
-        spot: "780.00",
-        paths: 1000,
-        strategies: [
-          { id: "unhedged", mean_pnl: "-12.00", p05: "-40.00", p50: "-10.00", p95: "8.00" },
-          { id: "delta", mean_pnl: "-4.00", p05: "-12.00", p50: "-3.00", p95: "2.00" },
-          { id: "lots_delta", mean_pnl: "-2.00", p05: "-6.00", p50: "-1.00", p95: "1.00" },
-          { id: "lots_gemini", mean_pnl: "-1.50", p05: "-5.00", p50: "-1.00", p95: "0.80" },
-        ],
-      }),
-    })
-  })
   await page.route("**/trades", async (route) => {
     await route.fulfill({
       status: 200,
@@ -133,8 +116,12 @@ test.describe("M4 smoke — disconnected", () => {
     await expect(page.getByTestId("vault-page")).toBeVisible()
     await expect(page.getByTestId("solvency-panel")).toBeVisible()
     await expect(page.getByTestId("wallet-disconnected")).toContainText("Connect a wallet to deposit")
+    await expect(page.getByRole("heading", { name: "Gemini vs Wall Street" })).toBeVisible()
     await expect(page.getByTestId("crowd-chart")).toBeVisible()
-    await expect(page.getByTestId("pnl-sim")).toBeVisible()
+    await expect(page.getByTestId("crowd-chart")).toContainText("24%")
+    await expect(page.getByTestId("crowd-chart")).toContainText("Spot")
+    await expect(page.getByRole("button", { name: "About Gemini vs Wall Street" })).toBeVisible()
+    await expect(page.getByTestId("pnl-sim")).toHaveCount(0)
     await expect(page.getByTestId("trade-tape")).toBeVisible()
   })
 })

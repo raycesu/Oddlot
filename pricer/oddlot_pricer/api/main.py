@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 
@@ -15,7 +14,6 @@ from oddlot_pricer.api.schemas import (
     BookResponse,
     DistributionResponse,
     QuotesResponse,
-    SimulationResponse,
     TradesResponse,
 )
 from oddlot_pricer.config import OddlotConfig, get_config
@@ -28,7 +26,6 @@ from oddlot_pricer.pricing.engine import (
     build_quotes_payload,
     default_series_registry,
 )
-from oddlot_pricer.pricing.simulation import cached_simulation, run_simulation
 from oddlot_pricer.pricing.market_data import (
     LiveMarketData,
     MarketDataProvider,
@@ -141,32 +138,6 @@ def get_distribution() -> DistributionResponse:
     snapshot = state.snapshot()
     payload = build_distribution_payload(snapshot, state.config)
     return DistributionResponse.model_validate(payload)
-
-
-def _simulation_payload() -> dict[str, Any]:
-    state = get_state()
-    snapshot = state.snapshot()
-    expiry = datetime.fromisoformat(state.config.year_end.expiry.replace("Z", "+00:00"))
-    fingerprint = f"{snapshot.spot}|{state.config.year_end.expiry}|{snapshot.r}"
-
-    def build() -> dict[str, Any]:
-        return run_simulation(
-            spot=float(snapshot.spot),
-            expiry=expiry,
-            now=datetime.now(timezone.utc),
-            strike_step=state.config.year_end.strike_step,
-            width=float(state.config.year_end.widths[0]),
-            buckets=snapshot.gemini_buckets,
-            r=snapshot.r,
-            cost_bps=state.config.hedging.spyx_cost_bps,
-        )
-
-    return cached_simulation(fingerprint, build)
-
-
-@app.get("/simulation", response_model=SimulationResponse)
-def get_simulation() -> SimulationResponse:
-    return SimulationResponse.model_validate(_simulation_payload())
 
 
 @app.get("/trades", response_model=TradesResponse)

@@ -9,12 +9,11 @@ import {
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
-import { CrowdChart } from "@/components/crowd-chart"
+import { CrowdChart, GeminiInfo } from "@/components/crowd-chart"
 import { NettingMeter } from "@/components/netting-meter"
-import { PnlSim } from "@/components/pnl-sim"
 import { TradeTape } from "@/components/trade-tape"
 import { Button } from "@/components/ui/button"
-import type { BookResponse, DistributionResponse, SimulationResponse, TradesResponse } from "@/lib/api"
+import type { BookResponse, DistributionResponse, TradesResponse } from "@/lib/api"
 import { explorerTxUrl } from "@/lib/config"
 import { mapProgramError } from "@/lib/errors"
 import { formatDollars, formatShares } from "@/lib/format"
@@ -28,7 +27,7 @@ type VaultPanelProps = {
   book: BookResponse | null
   trades: TradesResponse | null
   distribution: DistributionResponse | null
-  simulation: SimulationResponse | null
+  spot: number
   isLoading: boolean
   onRefresh: () => Promise<void>
 }
@@ -39,7 +38,7 @@ export const VaultPanel = ({
   book,
   trades,
   distribution,
-  simulation,
+  spot,
   isLoading,
   onRefresh,
 }: VaultPanelProps) => {
@@ -221,13 +220,20 @@ export const VaultPanel = ({
       </section>
 
       <section>
-        <h2 className="mb-3 text-xl font-medium tracking-tight text-ink">Crowd vs Wall Street</h2>
-        <CrowdChart buckets={distribution?.buckets ?? []} />
-      </section>
-
-      <section>
-        <h2 className="mb-3 text-xl font-medium tracking-tight text-ink">LP P&amp;L simulation</h2>
-        <PnlSim simulation={simulation} />
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <h2 className="text-xl font-medium tracking-tight text-ink">Gemini vs Wall Street</h2>
+          <GeminiInfo />
+          {distribution?.event ? (
+            <span className="rounded-full border border-line px-2 py-0.5 text-xs text-muted">
+              {distribution.event}
+            </span>
+          ) : null}
+        </div>
+        <CrowdChart
+          buckets={distribution?.buckets ?? []}
+          spot={spot}
+          ratio={Number.parseFloat(distribution?.r ?? "") || 0}
+        />
       </section>
 
       <section>

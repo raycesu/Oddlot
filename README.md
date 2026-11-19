@@ -269,7 +269,7 @@ More detail: [`PLAN.md`](./PLAN.md) · [`PRD.md`](./PRD.md) · [`docs/README.md`
 
 ## What's next
 
-- Gemini bucket hedge at live asks · crowd vs Wall Street chart · LP P&L sim (P1)  
+- Gemini bucket hedge at live asks · Gemini vs Wall Street chart (P1)  
 - More underlyings via xStocks + Pyth · hedge-aware collateral · licensed non-US path  
 
 **Never:** mainnet, real funds, keypairs/API keys in git, floating-point math on-chain.

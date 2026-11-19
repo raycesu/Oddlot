@@ -45,9 +45,3 @@ def test_trades_schema() -> None:
     response = CLIENT.get("/trades")
     assert response.status_code == 200
     validate("trades.schema.json", response.json())
-
-
-def test_simulation_schema() -> None:
-    response = CLIENT.get("/simulation")
-    assert response.status_code == 200
-    validate("simulation.schema.json", response.json())

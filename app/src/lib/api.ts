@@ -64,21 +64,6 @@ export type TradesResponse = {
   trades: TradeRow[]
 }
 
-export type SimulationStrategy = {
-  id: "unhedged" | "delta" | "lots_delta" | "lots_gemini"
-  mean_pnl: string
-  p05: string
-  p50: string
-  p95: string
-}
-
-export type SimulationResponse = {
-  asof: string
-  spot: string
-  paths: number
-  strategies: SimulationStrategy[]
-}
-
 export type FaucetSuccess = {
   wallet: string
   usdc: string
@@ -100,7 +85,6 @@ export const fetchQuotes = (): Promise<QuotesResponse> => getJson("/quotes")
 export const fetchBook = (): Promise<BookResponse> => getJson("/book")
 export const fetchDistribution = (): Promise<DistributionResponse> => getJson("/distribution")
 export const fetchTrades = (): Promise<TradesResponse> => getJson("/trades")
-export const fetchSimulation = (): Promise<SimulationResponse> => getJson("/simulation")
 
 export const requestFaucet = async (wallet: string): Promise<FaucetSuccess> => {
   const response = await fetch(`${appConfig.keeperUrl}/faucet`, {

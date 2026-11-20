@@ -21,7 +21,7 @@ const VaultPage = () => {
         book={pricer.book}
         trades={pricer.trades}
         distribution={pricer.distribution}
-        simulation={pricer.simulation}
+        spot={Number.parseFloat(pricer.quotes?.spot ?? "") || 0}
         isLoading={vaultState.isLoading && pricer.isLoading}
         onRefresh={vaultState.refresh}
       />
